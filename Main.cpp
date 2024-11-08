@@ -32,6 +32,8 @@ int main() {
     // Player Attributes
     constexpr auto playerStartingPos = Vector2(960, 540);
     constexpr float playerRadius = 15.0f;
+    constexpr float gravity = 2048.0f;
+    constexpr float playerSpeed = 3.0f;
 
     Vector2 playerPos = playerStartingPos;
 
@@ -42,6 +44,9 @@ int main() {
     // Player Related Info
     int score = 0;
     float scoreMultiplier = 1.0f;
+    float scoreMultiplierMax = 8.0f;
+
+    float timeMultiplier = 1.0f;
 
     // Camera Attributes
     Camera2D camera = {0};
@@ -61,11 +66,17 @@ int main() {
     // Detect window close button or ESC key
     while (!WindowShouldClose()) {
         const float delta = GetFrameTime();
-        physicsTimer += delta;
-        shapeSpawnTimer += delta;
-        scoreTimer -= delta;
+        physicsTimer += delta * timeMultiplier;
+        shapeSpawnTimer += delta * timeMultiplier;
+        scoreTimer -= delta * timeMultiplier;
 
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            timeMultiplier = 0.3f;
+        } else {
+            timeMultiplier = 1.0f;
+        }
+
+        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
             isMouseClicked = true;
         }
 
@@ -83,17 +94,13 @@ int main() {
         while (physicsTimer > physicsDelta) {
             physicsTimer -= physicsDelta;
 
-            constexpr float gravity = 2048.0f;
-
             // Update
             velocity.y += gravity * physicsDelta;
             playerPos = Vector2Add(playerPos, Vector2MultiplyS(velocity, physicsDelta));
 
             // Main Player Movement
             if (isMouseClicked) {
-                constexpr float playerSpeed = 3.0f;
                 velocity = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
-                //velocity = Vector2MultiplyS(Vector2((GetMousePosition().x - windowWidth / 2.0f), (GetMousePosition().y - windowHeight / 2.0f)), playerSpeed);
             }
 
             // Floor Collision
@@ -105,15 +112,18 @@ int main() {
             // Shape Collision
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape shape = shapes[i];
-                if (Vector2Distance(shape.pos, playerPos) < shape.radius + playerRadius) {
+                if (Vector2DistanceSqr(shape.pos, playerPos) < pow(shape.radius + playerRadius, 2.0)) {
                     shapes.erase(shapes.begin() + i);
 
                     velocity.y = -1000.0;
                     velocity.x = velocity.x * 0.5f;
 
                     score += 100.0f * scoreMultiplier;
-                    scoreMultiplier++;
                     scoreTimer = 1.0f;
+
+                    if (scoreMultiplier < scoreMultiplierMax) {
+                        scoreMultiplier++;
+                    }
 
                     break;
                 }
@@ -130,6 +140,22 @@ int main() {
         // Draw within the camera
         BeginMode2D(camera);
 
+        // Velocity Preview
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            Vector2 vel = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
+            Vector2 pos = playerPos;
+
+            constexpr int lineCount = 300;
+
+            for (int i = 0; i < lineCount; ++i) {
+                vel.y += gravity * physicsDelta;
+                const Vector2 newPos = Vector2Add(pos, Vector2MultiplyS(vel, physicsDelta));
+                DrawLineEx(pos, newPos, 5, Color(240, 240, 240, (1.0f - static_cast<float>(i) / static_cast<float>(lineCount)) * 255.0f));
+                pos = newPos;
+            }
+        }
+
+        // Draw Shapes
         for (auto shape: shapes) {
             shape.draw();
         }
