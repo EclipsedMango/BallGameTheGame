@@ -20,11 +20,14 @@ int main() {
 
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 
+    // Timers
     float physicsTimer = 0.0f;
     constexpr float physicsDelta = 1.0f / 240.0f;
 
     float shapeSpawnTimer = 0.0f;
     constexpr float shapesDelta = 1.0f / 2.0f;
+
+    float scoreTimer = 0.0f;
 
     // Player Attributes
     constexpr auto playerStartingPos = Vector2(960, 540);
@@ -35,6 +38,10 @@ int main() {
     auto velocity = Vector2(0, 0);
 
     bool isMouseClicked = false;
+
+    // Player Related Info
+    int score = 0;
+    float scoreMultiplier = 1.0f;
 
     // Camera Attributes
     Camera2D camera = {0};
@@ -56,11 +63,17 @@ int main() {
         const float delta = GetFrameTime();
         physicsTimer += delta;
         shapeSpawnTimer += delta;
+        scoreTimer -= delta;
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             isMouseClicked = true;
         }
 
+        if (scoreTimer < 0.0f) {
+            scoreMultiplier = 1.0f;
+        }
+
+        // Shape Process
         while (shapeSpawnTimer > shapesDelta && shapes.size() < 1500) {
             shapeSpawnTimer -= shapesDelta;
             shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20, RED);
@@ -78,8 +91,8 @@ int main() {
 
             // Main Player Movement
             if (isMouseClicked) {
-                constexpr float playerSpeed = 1536.0f;
-                velocity = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos)), playerSpeed);
+                constexpr float playerSpeed = 3.0f;
+                velocity = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
                 //velocity = Vector2MultiplyS(Vector2((GetMousePosition().x - windowWidth / 2.0f), (GetMousePosition().y - windowHeight / 2.0f)), playerSpeed);
             }
 
@@ -97,6 +110,10 @@ int main() {
 
                     velocity.y = -1000.0;
                     velocity.x = velocity.x * 0.5f;
+
+                    score += 100.0f * scoreMultiplier;
+                    scoreMultiplier++;
+                    scoreTimer = 1.0f;
 
                     break;
                 }
@@ -123,6 +140,7 @@ int main() {
 
         EndMode2D();
 
+        drawTextCentered(TextFormat("%d", score), 960, 6, 64, RAYWHITE);
         DrawFPS(6, 6);
         EndDrawing();
     }
