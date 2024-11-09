@@ -103,10 +103,22 @@ int main() {
                 velocity = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
             }
 
-            // Floor Collision
+            // Floor and Ceiling Collision
             if (playerPos.y > 1000 - 15) {
                 playerPos.y = 1000 - 15;
                 velocity.y = -velocity.y * 0.75f;
+            } else if (playerPos.y < -1480 - 15) {
+                playerPos.y = -1480 - 15;
+                velocity.y = -velocity.y * 0.75f;
+            }
+
+            // Wall Collision
+            if (playerPos.x > 3960 - 15) {
+                playerPos.x = 3960 - 15;
+                velocity.x = -velocity.x * 0.75f;
+            } else if (playerPos.x < -2050 + 15) {
+                playerPos.x = -2050 + 15;
+                velocity.x = -velocity.x * 0.75f;
             }
 
             // Shape Collision
@@ -129,7 +141,7 @@ int main() {
                 }
             }
 
-            camera.target = Vector2(playerPos.x, std::min(playerPos.y, windowHeight / 1.8f));
+            camera.target = Vector2(std::min(std::max(playerPos.x, -1320.0f), 3225.0f), std::min(std::max(playerPos.y, -1115.0f), windowHeight / 1.8f));
             isMouseClicked = false;
         }
 
@@ -160,9 +172,18 @@ int main() {
             shape.draw();
         }
 
-        // Circle is player, Rectangle is ground.
+        // Player
         DrawCircleV(playerPos, playerRadius, Color(52, 156, 243, 255));
-        DrawRectangleV(Vector2(-5000, windowHeight - 80.0f), Vector2(10000, 160), Color(33, 37, 43, 255));
+
+        // Map Walls
+        // Floor
+        DrawRectangleV(Vector2(-3000, windowHeight - 80.0f), Vector2(7500, 160), Color(33, 37, 43, 255));
+        // Right Wall
+        DrawRectangleV(Vector2(-3000 + 790, -2500), Vector2(160, 5000), Color(33, 37, 43, 255));
+        // Left Wall
+        DrawRectangleV(Vector2(3000 + 960, -2500), Vector2(160, 5000), Color(33, 37, 43, 255));
+        // Ceiling
+        DrawRectangleV(Vector2(-3000, -1670), Vector2(7500, 160), Color(33, 37, 43, 255));
 
         EndMode2D();
 
