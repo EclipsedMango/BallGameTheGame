@@ -23,6 +23,10 @@ endif()
 
 add_executable(BallGameTheGame Main.cpp
         Shape.cpp
-        Shape.h)
+        Shape.h
+        Game.cpp
+        Game.h
+        Util.cpp
+        Util.h)
 
 target_link_libraries(BallGameTheGame raylib)

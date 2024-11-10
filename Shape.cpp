@@ -4,19 +4,25 @@
 
 #include "Shape.h"
 
+#include <cmath>
 #include <random>
 
 #include "raylib.h"
 
 
-Shape::Shape(Vector2 randomPos, float radius, Color color) {
+Shape::Shape(const Vector2 randomPos, const float radius, const int type) {
     this->pos = randomPos;
     this->radius = radius;
-    this->color = color;
+    this->type = type;
 }
 
 void Shape::draw() const {
-    DrawCircle(pos.x, pos.y, radius, color);
+    if (type == 0) {
+        DrawCircle(pos.x, pos.y, radius, RED);
+    } else if (type == 1) {
+        DrawPoly(pos, 3, radius, PI, GREEN);
+    }
+
 }
 
 Shape::Shape() = default;

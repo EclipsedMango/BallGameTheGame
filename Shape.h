@@ -10,9 +10,9 @@ class Shape {
 public:
     Vector2 pos = {};
     float radius = 0;
-    Color color = {};
+    int type = 0;
 
-    Shape(Vector2 randomPos, float radius, Color color);
+    Shape(Vector2 randomPos, float radius, int type);
     void draw() const;
     Shape();
 };
