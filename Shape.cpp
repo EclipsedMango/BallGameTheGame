@@ -21,6 +21,8 @@ void Shape::draw() const {
         DrawCircle(pos.x, pos.y, radius, RED);
     } else if (type == 1) {
         DrawPoly(pos, 3, radius, PI, GREEN);
+    } else if (type == 2) {
+        DrawCircle(pos.x, pos.y, radius, GOLD);
     }
 
 }

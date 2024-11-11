@@ -5,12 +5,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-
-
-class Game {
-
-};
-
-
+void spawnShape(int type);
 
 #endif //GAME_H

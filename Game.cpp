@@ -11,6 +11,9 @@
 #include "Shape.h"
 #include "Util.h"
 
+// Shapes
+auto shapes = std::vector<Shape>();
+
 void runGame() {
     // Timers
     float physicsTimer = 0.0f;
@@ -49,14 +52,11 @@ void runGame() {
     camera.rotation = 0.0f;
     camera.zoom = 1.25f;
 
-    // Shapes
-    auto shapes = std::vector<Shape>();
-
-    for (int i = 0; i < 100; ++i) {
-        shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20, 0);
+    for (int i = 0; i < 50; ++i) {
+        spawnShape(0);
 
         if (i < 15) {
-            shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20, 1);
+            spawnShape(1);
         }
     }
 
@@ -81,6 +81,8 @@ void runGame() {
 
                 inputTimeLeft = std::max(inputTimeLeft - 0.25f, 0.0f);
             }
+        } else if (inputTimeLeft == 0) {
+            timeMultiplier = 1.0f;
         }
 
         if (scoreTimer < 0.0f) {
@@ -90,10 +92,17 @@ void runGame() {
         // Shape Process
         while (shapeSpawnTimer > shapesDelta && shapes.size() < 1500) {
             shapeSpawnTimer -= shapesDelta;
-            shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20, 0);
 
-            if (GetRandomValue(0, 4) == 0) {
-                shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20, 1);
+            if (GetRandomValue(0, 2) == 0) {
+                spawnShape(0);
+            }
+
+            if (GetRandomValue(0, 8) == 0) {
+                spawnShape(1);
+            }
+
+            if (GetRandomValue(0, 32) == 0) {
+                spawnShape(2);
             }
         }
 
@@ -133,15 +142,27 @@ void runGame() {
             // Shape Collision
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape shape = shapes[i];
-                if (Vector2DistanceSqr(shape.pos, playerPos) < pow(shape.radius + playerRadius, 2.0) && shape.type == 0) {
+
+                if (Vector2DistanceSqr(shape.pos, playerPos) < pow(shape.radius + playerRadius, 2.0)) {
                     shapes.erase(shapes.begin() + i);
 
                     velocity.y = -1000.0;
                     velocity.x = velocity.x * 0.5f;
 
-                    score += 100.0f * scoreMultiplier;
-                    scoreTimer = 1.0f;
+                    switch (shape.type) {
+                        case 0:
+                            score += 100.0f * scoreMultiplier;
+                            break;
+                        case 1:
+                            runGame();
+                            return;
+                        case 2:
+                            score += 200.0f * scoreMultiplier;
+                            break;
+                        default: break;
+                    }
 
+                    scoreTimer = 1.0f;
                     inputTimeLeft = std::min(inputTimeLeft + 0.5f, 1.0f);
 
                     if (scoreMultiplier < scoreMultiplierMax) {
@@ -149,11 +170,6 @@ void runGame() {
                     }
 
                     break;
-                }
-
-                if (Vector2DistanceSqr(shape.pos, playerPos) < pow(shape.radius + playerRadius, 2.0) && shape.type == 1) {
-                    runGame();
-                    return;
                 }
             }
             camera.target = Vector2Lerp(camera.target,
@@ -213,5 +229,20 @@ void runGame() {
         drawTextCentered(TextFormat("%d", shapes.size()), 24, 36, 24, DARKGREEN);
         DrawFPS(6, 6);
         EndDrawing();
+    }
+}
+
+void spawnShape(int type) {
+    switch (type) {
+        case 0:
+            shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20, 0);
+            break;
+        case 1:
+            shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20 * 1.25, 1);
+            break;
+        case 2:
+            shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20 * 0.75, 2);
+            break;
+        default: shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20, 0);;
     }
 }
