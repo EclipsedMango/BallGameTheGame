@@ -22,11 +22,17 @@ if (NOT raylib_FOUND) # If there's none, fetch and build raylib
 endif()
 
 add_executable(BallGameTheGame Main.cpp
-        Shape.cpp
-        Shape.h
-        Game.cpp
-        Game.h
+        Shapes/Shape.cpp
+        Shapes/Shape.h
+        Game/Game.cpp
+        Game/Game.h
         Util.cpp
-        Util.h)
+        Util.h
+        Shapes/CircleShape.cpp
+        Shapes/CircleShape.h
+        Shapes/TriangleShape.cpp
+        Shapes/TriangleShape.h
+        Shapes/GoldCircleShape.cpp
+        Shapes/GoldCircleShape.h)
 
 target_link_libraries(BallGameTheGame raylib)

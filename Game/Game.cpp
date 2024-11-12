@@ -4,15 +4,19 @@
 
 #include "Game.h"
 
+#include <cstdio>
 #include <vector>
 
 #include "raylib.h"
 #include "raymath.h"
-#include "Shape.h"
-#include "Util.h"
+#include "../Shapes/Shape.h"
+#include "../Shapes/CircleShape.h"
+#include "../Util.h"
+#include "../Shapes/GoldCircleShape.h"
+#include "../Shapes/TriangleShape.h"
 
 // Shapes
-auto shapes = std::vector<Shape>();
+auto shapes = std::vector<Shape*>();
 
 void runGame() {
     // Timers
@@ -97,7 +101,7 @@ void runGame() {
                 spawnShape(0);
             }
 
-            if (GetRandomValue(0, 8) == 0) {
+            if (GetRandomValue(0, 12) == 0) {
                 spawnShape(1);
             }
 
@@ -141,15 +145,13 @@ void runGame() {
 
             // Shape Collision
             for (int i = 0; i < shapes.size(); ++i) {
-                Shape shape = shapes[i];
+                Shape* shape = shapes[i];
 
-                if (Vector2DistanceSqr(shape.pos, playerPos) < pow(shape.radius + playerRadius, 2.0)) {
-                    shapes.erase(shapes.begin() + i);
-
+                if (Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
                     velocity.y = -1000.0;
                     velocity.x = velocity.x * 0.5f;
 
-                    switch (shape.type) {
+                    switch (shape->type) {
                         case 0:
                             score += 100.0f * scoreMultiplier;
                             break;
@@ -169,6 +171,8 @@ void runGame() {
                         scoreMultiplier++;
                     }
 
+                    shapes.erase(shapes.begin() + i);
+                    delete shape;
                     break;
                 }
             }
@@ -205,7 +209,7 @@ void runGame() {
 
         // Draw Shapes
         for (auto shape: shapes) {
-            shape.draw();
+            shape->draw();
         }
 
         // Player
@@ -235,14 +239,14 @@ void runGame() {
 void spawnShape(int type) {
     switch (type) {
         case 0:
-            shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20, 0);
+            shapes.push_back(new CircleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
             break;
         case 1:
-            shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20 * 1.25, 1);
+            shapes.push_back(new TriangleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
             break;
         case 2:
-            shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20 * 0.75, 2);
+            shapes.push_back(new GoldCircleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
             break;
-        default: shapes.emplace_back(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980)), 20, 0);;
+        default: printf("This shape doesn't exist\n");
     }
 }

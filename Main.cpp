@@ -1,10 +1,4 @@
-#include <array>
-#include <iostream>
-#include <vector>
-
 #include "raylib.h"
-#include "raymath.h"
-#include "Shape.h"
 #include "Util.h"
 
 void runGame();

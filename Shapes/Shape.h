@@ -8,12 +8,13 @@
 
 class Shape {
 public:
+    virtual ~Shape();
+
     Vector2 pos = {};
     float radius = 0;
     int type = 0;
 
-    Shape(Vector2 randomPos, float radius, int type);
-    void draw() const;
+    virtual void draw() const;
     Shape();
 };
 
