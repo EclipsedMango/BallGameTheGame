@@ -11,7 +11,10 @@ class TriangleShape final : public Shape {
 public:
     explicit TriangleShape(Vector2 randomPos);
     void draw() const override;
+    void physicsUpdate() override;
     TriangleShape() = default;
+
+    float rotation = 0;
 };
 
 

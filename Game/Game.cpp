@@ -9,19 +9,14 @@
 
 #include "raylib.h"
 #include "raymath.h"
-#include "../Shapes/Shape.h"
 #include "../Shapes/CircleShape.h"
 #include "../Util.h"
 #include "../Shapes/GoldCircleShape.h"
 #include "../Shapes/TriangleShape.h"
 
-// Shapes
-auto shapes = std::vector<Shape*>();
-
 void runGame() {
     // Timers
     float physicsTimer = 0.0f;
-    constexpr float physicsDelta = 1.0f / 240.0f;
 
     float shapeSpawnTimer = 0.0f;
     constexpr float shapesDelta = 1.0f / 2.0f;
@@ -49,6 +44,9 @@ void runGame() {
 
     float timeMultiplier = 1.0f;
 
+    // Shapes
+    auto shapes = std::vector<Shape*>();
+
     // Camera Attributes
     Camera2D camera = {0};
     camera.target = Vector2(playerPos.x, playerPos.y);
@@ -57,10 +55,14 @@ void runGame() {
     camera.zoom = 1.25f;
 
     for (int i = 0; i < 50; ++i) {
-        spawnShape(0);
+        spawnShape(&shapes, 0);
 
         if (i < 15) {
-            spawnShape(1);
+            spawnShape(&shapes, 1);
+        }
+
+        if (i < 2) {
+            spawnShape(&shapes, 2);
         }
     }
 
@@ -98,15 +100,15 @@ void runGame() {
             shapeSpawnTimer -= shapesDelta;
 
             if (GetRandomValue(0, 2) == 0) {
-                spawnShape(0);
+                spawnShape(&shapes, 0);
             }
 
             if (GetRandomValue(0, 12) == 0) {
-                spawnShape(1);
+                spawnShape(&shapes, 1);
             }
 
             if (GetRandomValue(0, 32) == 0) {
-                spawnShape(2);
+                spawnShape(&shapes, 2);
             }
         }
 
@@ -117,6 +119,10 @@ void runGame() {
             // Update
             velocity.y += gravity * physicsDelta;
             playerPos = Vector2Add(playerPos, Vector2MultiplyS(velocity, physicsDelta));
+
+            for (const auto shape: shapes) {
+                shape->physicsUpdate();
+            }
 
             // Main Player Movement
             if (isMouseClicked) {
@@ -236,16 +242,16 @@ void runGame() {
     }
 }
 
-void spawnShape(int type) {
+void spawnShape(std::vector<Shape*>* shapes, const int type) {
     switch (type) {
         case 0:
-            shapes.push_back(new CircleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
+            shapes->push_back(new CircleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
             break;
         case 1:
-            shapes.push_back(new TriangleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
+            shapes->push_back(new TriangleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
             break;
         case 2:
-            shapes.push_back(new GoldCircleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
+            shapes->push_back(new GoldCircleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
             break;
         default: printf("This shape doesn't exist\n");
     }

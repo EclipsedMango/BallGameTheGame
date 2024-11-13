@@ -4,7 +4,9 @@
 
 #ifndef GAME_H
 #define GAME_H
+#include <vector>
+#include "../Shapes/Shape.h"
 
-void spawnShape(int type);
+void spawnShape(std::vector<Shape*>*, int type);
 
 #endif //GAME_H

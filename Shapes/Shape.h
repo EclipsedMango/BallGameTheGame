@@ -15,6 +15,7 @@ public:
     int type = 0;
 
     virtual void draw() const;
+    virtual void physicsUpdate();
     Shape();
 };
 

@@ -12,5 +12,9 @@ Shape::~Shape() = default;
 
 // Define the draw method
 void Shape::draw() const {
-    // Placeholder implementation, replace with actual drawing code if needed
+
+}
+
+void Shape::physicsUpdate() {
+
 }
