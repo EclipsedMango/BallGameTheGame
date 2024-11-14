@@ -39,6 +39,7 @@ void runGame() {
 
     // Player Related Info
     int score = 0;
+    float displayScore = 0;
     float scoreMultiplier = 1.0f;
     float scoreMultiplierMax = 8.0f;
 
@@ -46,6 +47,7 @@ void runGame() {
 
     // Shapes
     auto shapes = std::vector<Shape*>();
+    auto shapePos = Vector2(0, 0);
 
     // Camera Attributes
     Camera2D camera = {0};
@@ -159,13 +161,17 @@ void runGame() {
 
                     switch (shape->type) {
                         case 0:
-                            score += 100.0f * scoreMultiplier;
+                            displayScore = 100.0f * scoreMultiplier;
+                            score += displayScore;
+                            shapePos = shape->pos;
                             break;
                         case 1:
                             runGame();
                             return;
                         case 2:
-                            score += 200.0f * scoreMultiplier;
+                            displayScore = 500.0f * scoreMultiplier;
+                            score += displayScore;
+                            shapePos = shape->pos;
                             break;
                         default: break;
                     }
@@ -213,6 +219,10 @@ void runGame() {
             }
         }
 
+        if (displayScore != 0) {
+            drawTextCentered(TextFormat("%.0f", displayScore), shapePos.x, shapePos.y, 32, WHITE);
+        }
+
         // Draw Shapes
         for (auto shape: shapes) {
             shape->draw();
@@ -221,7 +231,6 @@ void runGame() {
         // Player
         DrawCircleV(playerPos, playerRadius, Color(52, 156, 243, 255));
 
-        // Map Walls
         // Floor
         DrawRectangleV(Vector2(-3000, windowHeight - 80.0f), Vector2(7500, 160), Color(33, 37, 43, 255));
         // Right Wall
@@ -233,8 +242,8 @@ void runGame() {
 
         EndMode2D();
 
-        drawTextCentered(TextFormat("%d", score), 960, 6, 64, RAYWHITE);
-        drawProgressBar(960, 128, 50, 600, WHITE, GRAY, inputTimeLeft);
+        drawTextCentered(TextFormat("%d", score), 960, 24, 64, RAYWHITE);
+        drawProgressBar(960, 128, 30, 600, WHITE, GRAY, inputTimeLeft);
 
         drawTextCentered(TextFormat("%d", shapes.size()), 24, 36, 24, DARKGREEN);
         DrawFPS(6, 6);
