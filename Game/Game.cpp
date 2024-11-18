@@ -135,6 +135,7 @@ void runGame() {
             if (playerPos.y > 1000 - 15) {
                 playerPos.y = 1000 - 15;
                 velocity.y = -velocity.y * 0.75f;
+                velocity.x = velocity.x * 0.99f;
 
                 inputTimeLeft = 1.0f;
             } else if (playerPos.y < -1480 - 15) {
