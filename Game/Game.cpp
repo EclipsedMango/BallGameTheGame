@@ -26,7 +26,7 @@ void runGame() {
     float inputTimeLeft = 1.0f;
 
     // Player Attributes
-    constexpr auto playerStartingPos = Vector2(960, 540);
+    constexpr auto playerStartingPos = Vector2(0, 540);
     constexpr float playerRadius = 15.0f;
     constexpr float gravity = 2048.0f;
     constexpr float playerSpeed = 3.0f;
@@ -54,7 +54,7 @@ void runGame() {
     camera.target = Vector2(playerPos.x, playerPos.y);
     camera.offset = Vector2(windowWidth / 2.0f, windowHeight / 2.0f);
     camera.rotation = 0.0f;
-    camera.zoom = 1.25f;
+    camera.zoom = 1.25f * (windowHeight / 1080.0f);
 
     for (int i = 0; i < 50; ++i) {
         spawnShape(&shapes, 0);
@@ -76,6 +76,14 @@ void runGame() {
         shapeSpawnTimer += delta * timeMultiplier;
         scoreTimer -= delta * timeMultiplier;
         inputTimeLeft = std::max(inputTimeLeft - delta / timeMultiplier / 24.0f, 0.0f);
+
+        if (IsWindowResized()) {
+            windowHeight = GetScreenHeight();
+            windowWidth = GetScreenWidth();
+
+            camera.offset = Vector2(windowWidth / 2.0f, windowHeight / 2.0f);
+            camera.zoom = 1.25f * (windowHeight / 1080.0f);
+        }
 
         if (inputTimeLeft > 0.0f) {
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -144,11 +152,11 @@ void runGame() {
             }
 
             // Wall Collision
-            if (playerPos.x > 3960 - 15) {
-                playerPos.x = 3960 - 15;
+            if (playerPos.x > 3000 - 15) {
+                playerPos.x = 3000 - 15;
                 velocity.x = -velocity.x * 0.75f;
-            } else if (playerPos.x < -2050 + 15) {
-                playerPos.x = -2050 + 15;
+            } else if (playerPos.x < -3000 + 15) {
+                playerPos.x = -3000 + 15;
                 velocity.x = -velocity.x * 0.75f;
             }
 
@@ -191,8 +199,9 @@ void runGame() {
             }
             camera.target = Vector2Lerp(camera.target,
                 Vector2(
-                    std::min(std::max(playerPos.x, -1320.0f), 3225.0f),
-                    std::min(std::max(playerPos.y, -1115.0f), windowHeight / 1.8f)),
+                    std::clamp(playerPos.x, -3030.0f + (windowWidth / (windowHeight / 1080.0f)) / 2.0f / 1.25f,
+                        3030.0f - (windowWidth / (windowHeight / 1080.0f)) / 2.0f / 1.25f),
+                    std::min(std::max(playerPos.y, -1115.0f), 1080 / 1.8f)),
                     10.0f * physicsDelta);
 
             isMouseClicked = false;
@@ -233,11 +242,11 @@ void runGame() {
         DrawCircleV(playerPos, playerRadius, Color(52, 156, 243, 255));
 
         // Floor
-        DrawRectangleV(Vector2(-3000, windowHeight - 80.0f), Vector2(7500, 160), Color(33, 37, 43, 255));
-        // Right Wall
-        DrawRectangleV(Vector2(-3000 + 790, -2500), Vector2(160, 5000), Color(33, 37, 43, 255));
+        DrawRectangleV(Vector2(-3000, 1080 - 80.0f), Vector2(7500, 160), Color(33, 37, 43, 255));
         // Left Wall
-        DrawRectangleV(Vector2(3000 + 960, -2500), Vector2(160, 5000), Color(33, 37, 43, 255));
+        DrawRectangleV(Vector2(-3000 - 160, -2500), Vector2(160, 5000), Color(33, 37, 43, 255));
+        // Right Wall
+        DrawRectangleV(Vector2(3000, -2500), Vector2(160, 5000), Color(33, 37, 43, 255));
         // Ceiling
         DrawRectangleV(Vector2(-3000, -1670), Vector2(7500, 160), Color(33, 37, 43, 255));
 
@@ -255,13 +264,13 @@ void runGame() {
 void spawnShape(std::vector<Shape*>* shapes, const int type) {
     switch (type) {
         case 0:
-            shapes->push_back(new CircleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
+            shapes->push_back(new CircleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980))));
             break;
         case 1:
-            shapes->push_back(new TriangleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
+            shapes->push_back(new TriangleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980))));
             break;
         case 2:
-            shapes->push_back(new GoldCircleShape(Vector2(GetRandomValue(-3000 + 960, 3000 + 960), GetRandomValue(-1500, 980))));
+            shapes->push_back(new GoldCircleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980))));
             break;
         default: printf("This shape doesn't exist\n");
     }

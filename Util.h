@@ -6,8 +6,8 @@
 #define UTIL_H
 #include "raylib.h"
 
-constexpr int windowWidth = 1920;
-constexpr int windowHeight = 1080;
+inline int windowWidth = 1920;
+inline int windowHeight = 1080;
 constexpr float physicsDelta = 1.0f / 240.0f;
 
 void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color color);
