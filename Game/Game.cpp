@@ -12,6 +12,7 @@
 #include "../Shapes/CircleShape.h"
 #include "../Util.h"
 #include "../Shapes/GoldCircleShape.h"
+#include "../Shapes/ScoreText.h"
 #include "../Shapes/TriangleShape.h"
 
 void runGame() {
@@ -47,7 +48,6 @@ void runGame() {
 
     // Shapes
     auto shapes = std::vector<Shape*>();
-    auto shapePos = Vector2(0, 0);
 
     // Camera Attributes
     Camera2D camera = {0};
@@ -56,7 +56,7 @@ void runGame() {
     camera.rotation = 0.0f;
     camera.zoom = 1.25f * (windowHeight / 1080.0f);
 
-    for (int i = 0; i < 50; ++i) {
+    for (int i = 0; i < 75; ++i) {
         spawnShape(&shapes, 0);
 
         if (i < 15) {
@@ -113,7 +113,7 @@ void runGame() {
                 spawnShape(&shapes, 0);
             }
 
-            if (GetRandomValue(0, 12) == 0) {
+            if (GetRandomValue(0, 16) == 0) {
                 spawnShape(&shapes, 1);
             }
 
@@ -164,7 +164,7 @@ void runGame() {
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
 
-                if (Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
+                if (shape->type != 4 && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
                     velocity.y = -1000.0;
                     velocity.x = velocity.x * 0.5f;
 
@@ -172,7 +172,8 @@ void runGame() {
                         case 0:
                             displayScore = 100.0f * scoreMultiplier;
                             score += displayScore;
-                            shapePos = shape->pos;
+                            shapes.push_back(new ScoreText(shape->pos, displayScore));
+                            spawnShape(&shapes, 0);
                             break;
                         case 1:
                             runGame();
@@ -180,12 +181,12 @@ void runGame() {
                         case 2:
                             displayScore = 500.0f * scoreMultiplier;
                             score += displayScore;
-                            shapePos = shape->pos;
+                            shapes.push_back(new ScoreText(shape->pos, displayScore));
                             break;
                         default: break;
                     }
 
-                    scoreTimer = 1.0f;
+                    scoreTimer = 1.5f;
                     inputTimeLeft = std::min(inputTimeLeft + 0.5f, 1.0f);
 
                     if (scoreMultiplier < scoreMultiplierMax) {
@@ -199,8 +200,7 @@ void runGame() {
             }
             camera.target = Vector2Lerp(camera.target,
                 Vector2(
-                    std::clamp(playerPos.x, -3030.0f + (windowWidth / (windowHeight / 1080.0f)) / 2.0f / 1.25f,
-                        3030.0f - (windowWidth / (windowHeight / 1080.0f)) / 2.0f / 1.25f),
+                    std::clamp(playerPos.x, -3030.0f + (windowWidth / camera.zoom) / 2.0f, 3030.0f - (windowWidth / camera.zoom) / 2.0f),
                     std::min(std::max(playerPos.y, -1115.0f), 1080 / 1.8f)),
                     10.0f * physicsDelta);
 
@@ -230,7 +230,7 @@ void runGame() {
         }
 
         if (displayScore != 0) {
-            drawTextCentered(TextFormat("%.0f", displayScore), shapePos.x, shapePos.y, 32, WHITE);
+
         }
 
         // Draw Shapes
@@ -252,8 +252,8 @@ void runGame() {
 
         EndMode2D();
 
-        drawTextCentered(TextFormat("%d", score), 960, 24, 64, RAYWHITE);
-        drawProgressBar(960, 128, 30, 600, WHITE, GRAY, inputTimeLeft);
+        drawTextCentered(TextFormat("%d", score), windowWidth / 2.0f, 24, 64, RAYWHITE);
+        drawProgressBar(windowWidth / 2.0f, 128, 30, 600, WHITE, GRAY, inputTimeLeft);
 
         drawTextCentered(TextFormat("%d", shapes.size()), 24, 36, 24, DARKGREEN);
         DrawFPS(6, 6);

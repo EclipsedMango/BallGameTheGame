@@ -33,6 +33,8 @@ add_executable(BallGameTheGame Main.cpp
         Shapes/TriangleShape.cpp
         Shapes/TriangleShape.h
         Shapes/GoldCircleShape.cpp
-        Shapes/GoldCircleShape.h)
+        Shapes/GoldCircleShape.h
+        Shapes/ScoreText.cpp
+        Shapes/ScoreText.h)
 
 target_link_libraries(BallGameTheGame raylib)
