@@ -109,11 +109,11 @@ void runGame() {
         while (shapeSpawnTimer > shapesDelta && shapes.size() < 1500) {
             shapeSpawnTimer -= shapesDelta;
 
-            if (GetRandomValue(0, 2) == 0) {
+            if (GetRandomValue(0, 8) == 0) {
                 spawnShape(&shapes, 0);
             }
 
-            if (GetRandomValue(0, 16) == 0) {
+            if (GetRandomValue(0, 24) == 0) {
                 spawnShape(&shapes, 1);
             }
 
@@ -133,6 +133,9 @@ void runGame() {
             for (const auto shape: shapes) {
                 shape->physicsUpdate();
             }
+
+            std::erase_if(shapes,
+                [](const Shape* o) { return o->killYourSelf; });
 
             // Main Player Movement
             if (isMouseClicked) {
@@ -172,8 +175,8 @@ void runGame() {
                         case 0:
                             displayScore = 100.0f * scoreMultiplier;
                             score += displayScore;
-                            shapes.push_back(new ScoreText(shape->pos, displayScore));
                             spawnShape(&shapes, 0);
+                            shapes.push_back(new ScoreText(shape->pos, displayScore));
                             break;
                         case 1:
                             runGame();
@@ -229,10 +232,6 @@ void runGame() {
             }
         }
 
-        if (displayScore != 0) {
-
-        }
-
         // Draw Shapes
         for (auto shape: shapes) {
             shape->draw();
@@ -255,7 +254,7 @@ void runGame() {
         drawTextCentered(TextFormat("%d", score), windowWidth / 2.0f, 24, 64, RAYWHITE);
         drawProgressBar(windowWidth / 2.0f, 128, 30, 600, WHITE, GRAY, inputTimeLeft);
 
-        drawTextCentered(TextFormat("%d", shapes.size()), 24, 36, 24, DARKGREEN);
+        drawTextCentered(TextFormat("%d", shapes.size()), 24, 36, 20, LIME);
         DrawFPS(6, 6);
         EndDrawing();
     }

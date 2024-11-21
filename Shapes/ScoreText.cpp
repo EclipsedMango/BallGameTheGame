@@ -4,7 +4,7 @@
 
 #include "ScoreText.h"
 
-ScoreText::ScoreText(const Vector2 pos, float displayScore) {
+ScoreText::ScoreText(const Vector2 pos, const float displayScore) {
     this->pos = pos;
     this->radius = -1000;
     this->type = 4;
@@ -19,5 +19,8 @@ void ScoreText::draw() const {
 void ScoreText::physicsUpdate() {
     if (colorAlpha > 0) {
         colorAlpha -= physicsDelta * 255;
+        pos.y -= physicsDelta * 128;
+    } else {
+        killYourSelf = true;
     }
 }
