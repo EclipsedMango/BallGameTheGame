@@ -11,10 +11,5 @@ CircleShape::CircleShape(const Vector2 randomPos) {
 }
 
 void CircleShape::draw() const {
-    DrawCircle(pos.x, pos.y, radius, RED);
-    // } else if (type == 1) {
-    //     DrawPoly(pos, 3, radius, PI, GREEN);
-    // } else if (type == 2) {
-    //     DrawCircle(pos.x, pos.y, radius, GOLD);
-    // }
+    DrawCircle(pos.x, pos.y, radius, Color(236, 55, 82, 255));
 }

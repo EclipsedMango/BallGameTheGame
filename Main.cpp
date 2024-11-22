@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include "Util.h"
-
-void runGame();
+#include "Game/Game.h"
+#include "Menus/MainMenu.h"
 
 int main() {
     // Initialization
@@ -12,7 +12,13 @@ int main() {
 
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 
-    runGame();
+    while (!WindowShouldClose()) {
+        if (inMenu) {
+            mainMenu();
+        } else {
+            runGame();
+        }
+    }
 
     CloseWindow();        // Close window and OpenGL context
     return 0;

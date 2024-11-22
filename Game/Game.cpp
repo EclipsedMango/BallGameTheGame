@@ -179,7 +179,8 @@ void runGame() {
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
                             break;
                         case 1:
-                            runGame();
+                            inMenu = true;
+                            hasDied = true;
                             return;
                         case 2:
                             displayScore = 500.0f * scoreMultiplier;

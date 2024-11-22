@@ -7,6 +7,7 @@
 #include <vector>
 #include "../Shapes/Shape.h"
 
+void runGame();
 void spawnShape(std::vector<Shape*>*, int type);
 
 #endif //GAME_H

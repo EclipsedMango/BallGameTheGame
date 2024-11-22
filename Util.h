@@ -9,9 +9,12 @@
 inline int windowWidth = 1920;
 inline int windowHeight = 1080;
 constexpr float physicsDelta = 1.0f / 240.0f;
+inline bool inMenu = true;
+inline bool hasDied = false;
 
 void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color color);
 Vector2 Vector2MultiplyS(Vector2 a, float b);
 void drawProgressBar(int posX, int posY, int height, int width, Color fillColor, Color emptyColor, float progress);
+void waitBeforeRunning();
 
 #endif //UTIL_H

@@ -22,3 +22,7 @@ void drawProgressBar(const int posX, const int posY, const int height, const int
 Vector2 Vector2MultiplyS(const Vector2 a, float b) {
     return Vector2(a.x * b, a.y * b);
 }
+
+void waitBeforeRunning() {
+    
+}
