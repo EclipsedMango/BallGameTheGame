@@ -39,10 +39,10 @@ void runGame() {
     bool isMouseClicked = false;
 
     // Player Related Info
-    int score = 0;
     float displayScore = 0;
     float scoreMultiplier = 1.0f;
     float scoreMultiplierMax = 8.0f;
+    score = 0;
 
     float timeMultiplier = 1.0f;
 
