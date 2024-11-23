@@ -16,6 +16,5 @@ inline int score = 0;
 void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color color);
 Vector2 Vector2MultiplyS(Vector2 a, float b);
 void drawProgressBar(int posX, int posY, int height, int width, Color fillColor, Color emptyColor, float progress);
-void waitBeforeRunning();
 
 #endif //UTIL_H

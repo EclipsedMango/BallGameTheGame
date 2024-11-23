@@ -11,6 +11,8 @@
 #include "raymath.h"
 #include "../Shapes/CircleShape.h"
 #include "../Util.h"
+#include "../Particles/Particle.h"
+#include "../Particles/PlayerDeathParticle.h"
 #include "../Shapes/GoldCircleShape.h"
 #include "../Shapes/ScoreText.h"
 #include "../Shapes/TriangleShape.h"
@@ -48,6 +50,9 @@ void runGame() {
 
     // Shapes
     auto shapes = std::vector<Shape*>();
+
+    // Particles
+    auto particles = std::vector<Particle*>();
 
     // Camera Attributes
     Camera2D camera = {0};
@@ -134,6 +139,10 @@ void runGame() {
                 shape->physicsUpdate();
             }
 
+            for (const auto particle: particles) {
+                particle->physicsUpdate();
+            }
+
             std::erase_if(shapes,
                 [](const Shape* o) { return o->killYourSelf; });
 
@@ -179,9 +188,13 @@ void runGame() {
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
                             break;
                         case 1:
-                            inMenu = true;
-                            hasDied = true;
-                            return;
+                            for (int i = 0; i < 15; ++i) {
+                                spawnParticles(&particles, playerPos);
+                            }
+                            // inMenu = true;
+                            // hasDied = true;
+                            //return;
+                            break;
                         case 2:
                             displayScore = 500.0f * scoreMultiplier;
                             score += displayScore;
@@ -233,6 +246,11 @@ void runGame() {
             }
         }
 
+        // Draw Particles
+        for (auto particle: particles) {
+            particle->draw();
+        }
+
         // Draw Shapes
         for (auto shape: shapes) {
             shape->draw();
@@ -256,6 +274,7 @@ void runGame() {
         drawProgressBar(windowWidth / 2.0f, 128, 30, 600, WHITE, GRAY, inputTimeLeft);
 
         drawTextCentered(TextFormat("%d", shapes.size()), 24, 36, 20, LIME);
+        drawTextCentered(TextFormat("%d", particles.size()), 24, 64, 20, LIME);
         DrawFPS(6, 6);
         EndDrawing();
     }
@@ -274,4 +293,9 @@ void spawnShape(std::vector<Shape*>* shapes, const int type) {
             break;
         default: printf("This shape doesn't exist\n");
     }
+}
+
+void spawnParticles(std::vector<Particle*>* particles, const Vector2 playerPos) {
+    particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-20, 20)),
+        GetRandomValue(playerPos.y, playerPos.y - 30)), BLUE, 4));
 }

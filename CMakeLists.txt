@@ -37,6 +37,10 @@ add_executable(BallGameTheGame Main.cpp
         Shapes/ScoreText.cpp
         Shapes/ScoreText.h
         Menus/MainMenu.cpp
-        Menus/MainMenu.h)
+        Menus/MainMenu.h
+        Particles/Particle.cpp
+        Particles/Particle.h
+        Particles/PlayerDeathParticle.cpp
+        Particles/PlayerDeathParticle.h)
 
 target_link_libraries(BallGameTheGame raylib)
