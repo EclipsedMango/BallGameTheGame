@@ -24,6 +24,9 @@ void runGame() {
     float shapeSpawnTimer = 0.0f;
     constexpr float shapesDelta = 1.0f / 2.0f;
 
+    float particleTimer = 0.0f;
+    constexpr float particleDelta = 0.05f;
+
     float scoreTimer = 0.0f;
 
     float inputTimeLeft = 1.0f;
@@ -79,6 +82,7 @@ void runGame() {
         const float delta = GetFrameTime();
         physicsTimer += delta * timeMultiplier;
         shapeSpawnTimer += delta * timeMultiplier;
+        particleTimer += delta * timeMultiplier;
         scoreTimer -= delta * timeMultiplier;
         inputTimeLeft = std::max(inputTimeLeft - delta / timeMultiplier / 24.0f, 0.0f);
 
@@ -108,6 +112,15 @@ void runGame() {
 
         if (scoreTimer < 0.0f) {
             scoreMultiplier = 1.0f;
+        }
+
+        // Particle Process
+        while (particleTimer > particleDelta) {
+            particleTimer -= particleDelta;
+
+            if (!particles.empty() && destoryParticle) {
+                particles.erase(particles.begin());
+            }
         }
 
         // Shape Process
@@ -193,7 +206,7 @@ void runGame() {
                             }
                             // inMenu = true;
                             // hasDied = true;
-                            //return;
+                            // return;
                             break;
                         case 2:
                             displayScore = 500.0f * scoreMultiplier;
@@ -297,5 +310,5 @@ void spawnShape(std::vector<Shape*>* shapes, const int type) {
 
 void spawnParticles(std::vector<Particle*>* particles, const Vector2 playerPos) {
     particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-20, 20)),
-        GetRandomValue(playerPos.y, playerPos.y - 30)), BLUE, 4));
+        GetRandomValue(playerPos.y, playerPos.y - 30)), 4));
 }

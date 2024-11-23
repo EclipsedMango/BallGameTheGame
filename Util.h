@@ -11,6 +11,7 @@ inline int windowHeight = 1080;
 constexpr float physicsDelta = 1.0f / 240.0f;
 inline bool inMenu = true;
 inline bool hasDied = false;
+inline bool destoryParticle = false;
 inline int score = 0;
 
 void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color color);

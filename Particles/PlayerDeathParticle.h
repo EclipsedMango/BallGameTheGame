@@ -8,10 +8,12 @@
 
 class PlayerDeathParticle : public Particle {
 public:
-    explicit PlayerDeathParticle(Vector2 playerPos, Color color, float size);
+    explicit PlayerDeathParticle(Vector2 playerPos, float size);
 
     void draw() const override;
     void physicsUpdate() override;
+
+    float colorAlpha = 0;
 };
 
 
