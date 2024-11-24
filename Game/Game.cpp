@@ -205,9 +205,6 @@ void runGame() {
                 Shape* shape = shapes[i];
 
                 if (!hasDied && shape->type != 4 && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
-                    velocity.y = -1000.0;
-                    velocity.x = velocity.x * 0.5f;
-
                     switch (shape->type) {
                         case 0:
                             displayScore = 100.0f * scoreMultiplier;
@@ -220,7 +217,7 @@ void runGame() {
                             break;
                         case 1:
                             for (int i = 0; i < 15; ++i) {
-                                spawnParticles(&particles, playerPos);
+                                spawnParticles(&particles, playerPos, velocity);
                             }
                             hasDied = true;
                             break;
@@ -234,6 +231,9 @@ void runGame() {
                             break;
                         default: break;
                     }
+
+                    velocity.y = -1000.0;
+                    velocity.x = velocity.x * 0.5f;
 
                     scoreTimer = 1.5f;
                     inputTimeLeft = std::min(inputTimeLeft + 0.5f, 1.0f);
@@ -328,7 +328,7 @@ void spawnShape(std::vector<Shape*>* shapes, const int type) {
     }
 }
 
-void spawnParticles(std::vector<Particle*>* particles, const Vector2 playerPos) {
+void spawnParticles(std::vector<Particle*>* particles, const Vector2 playerPos, const Vector2 playerVel) {
     particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-30, 30)),
-        GetRandomValue(playerPos.y, playerPos.y - 45)), 4));
+        GetRandomValue(playerPos.y, playerPos.y - 45)), 4, playerVel));
 }
