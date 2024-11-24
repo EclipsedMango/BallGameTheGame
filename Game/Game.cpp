@@ -42,6 +42,7 @@ void runGame() {
     auto velocity = Vector2(0, 0);
 
     bool isMouseClicked = false;
+    hasDied = false;
 
     // Player Related Info
     float displayScore = 0;
@@ -75,6 +76,9 @@ void runGame() {
             spawnShape(&shapes, 2);
         }
     }
+
+    BeginDrawing();
+    EndDrawing();
 
     // Main game loop
     // Detect window close button or ESC key
@@ -200,7 +204,7 @@ void runGame() {
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
 
-                if (shape->type != 4 && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
+                if (!hasDied && shape->type != 4 && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
                     velocity.y = -1000.0;
                     velocity.x = velocity.x * 0.5f;
 
@@ -210,16 +214,23 @@ void runGame() {
                             score += displayScore;
                             spawnShape(&shapes, 0);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
+
+                            shapes.erase(shapes.begin() + i);
+                            delete shape;
                             break;
                         case 1:
                             for (int i = 0; i < 15; ++i) {
                                 spawnParticles(&particles, playerPos);
                             }
                             hasDied = true;
+                            break;
                         case 2:
                             displayScore = 500.0f * scoreMultiplier;
                             score += displayScore;
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
+
+                            shapes.erase(shapes.begin() + i);
+                            delete shape;
                             break;
                         default: break;
                     }
@@ -231,8 +242,6 @@ void runGame() {
                         scoreMultiplier++;
                     }
 
-                    shapes.erase(shapes.begin() + i);
-                    delete shape;
                     break;
                 }
             }
@@ -298,7 +307,7 @@ void runGame() {
 
         drawTextCentered(TextFormat("%d", shapes.size()), 24, 32, 20, LIME);
         drawTextCentered(TextFormat("%d", particles.size()), 24, 60, 20, LIME);
-        drawTextCentered(TextFormat("%f.2", deathTimer), 80, 88, 20, LIME);
+        drawTextCentered(TextFormat("%.2f", deathTimer), 24, 88, 20, LIME);
         DrawFPS(6, 6);
         EndDrawing();
     }
