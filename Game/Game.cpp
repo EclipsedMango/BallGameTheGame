@@ -27,8 +27,8 @@ void runGame() {
     float particleTimer = 0.0f;
     constexpr float particleDelta = 0.05f;
 
+    float deathTimer = 0.75f;
     float scoreTimer = 0.0f;
-
     float inputTimeLeft = 1.0f;
 
     // Player Attributes
@@ -123,6 +123,15 @@ void runGame() {
             }
         }
 
+        // Death Process
+        if (hasDied) {
+            deathTimer -= delta;
+            if (deathTimer <= 0.0f) {
+                inMenu = true;
+                return;
+            }
+        }
+
         // Shape Process
         while (shapeSpawnTimer > shapesDelta && shapes.size() < 1500) {
             shapeSpawnTimer -= shapesDelta;
@@ -145,8 +154,10 @@ void runGame() {
             physicsTimer -= physicsDelta;
 
             // Update
-            velocity.y += gravity * physicsDelta;
-            playerPos = Vector2Add(playerPos, Vector2MultiplyS(velocity, physicsDelta));
+            if (!hasDied) {
+                velocity.y += gravity * physicsDelta;
+                playerPos = Vector2Add(playerPos, Vector2MultiplyS(velocity, physicsDelta));
+            }
 
             for (const auto shape: shapes) {
                 shape->physicsUpdate();
@@ -204,10 +215,7 @@ void runGame() {
                             for (int i = 0; i < 15; ++i) {
                                 spawnParticles(&particles, playerPos);
                             }
-                            // inMenu = true;
-                            // hasDied = true;
-                            // return;
-                            break;
+                            hasDied = true;
                         case 2:
                             displayScore = 500.0f * scoreMultiplier;
                             score += displayScore;
@@ -270,7 +278,9 @@ void runGame() {
         }
 
         // Player
-        DrawCircleV(playerPos, playerRadius, Color(52, 156, 243, 255));
+        if (!hasDied) {
+            DrawCircleV(playerPos, playerRadius, Color(52, 156, 243, 255));
+        }
 
         // Floor
         DrawRectangleV(Vector2(-3000, 1080 - 80.0f), Vector2(7500, 160), Color(33, 37, 43, 255));
@@ -286,8 +296,9 @@ void runGame() {
         drawTextCentered(TextFormat("%d", score), windowWidth / 2.0f, 24, 64, RAYWHITE);
         drawProgressBar(windowWidth / 2.0f, 128, 30, 600, WHITE, GRAY, inputTimeLeft);
 
-        drawTextCentered(TextFormat("%d", shapes.size()), 24, 36, 20, LIME);
-        drawTextCentered(TextFormat("%d", particles.size()), 24, 64, 20, LIME);
+        drawTextCentered(TextFormat("%d", shapes.size()), 24, 32, 20, LIME);
+        drawTextCentered(TextFormat("%d", particles.size()), 24, 60, 20, LIME);
+        drawTextCentered(TextFormat("%f.2", deathTimer), 80, 88, 20, LIME);
         DrawFPS(6, 6);
         EndDrawing();
     }
@@ -309,6 +320,6 @@ void spawnShape(std::vector<Shape*>* shapes, const int type) {
 }
 
 void spawnParticles(std::vector<Particle*>* particles, const Vector2 playerPos) {
-    particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-20, 20)),
-        GetRandomValue(playerPos.y, playerPos.y - 30)), 4));
+    particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-30, 30)),
+        GetRandomValue(playerPos.y, playerPos.y - 45)), 4));
 }

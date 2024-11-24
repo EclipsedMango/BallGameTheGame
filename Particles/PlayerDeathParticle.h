@@ -14,6 +14,8 @@ public:
     void physicsUpdate() override;
 
     float colorAlpha = 0;
+    float explosionAmountY = 0;
+    float explosionAmountX = 0;
 };
 
 

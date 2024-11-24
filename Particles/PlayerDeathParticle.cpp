@@ -12,25 +12,28 @@ PlayerDeathParticle::PlayerDeathParticle(const Vector2 playerPos, const float si
     this->size = size;
     this->lifespan = 255;
     this->colorAlpha = 255;
+    this->explosionAmountY = GetRandomValue(-2048, 2048);
+    this->explosionAmountX = GetRandomValue(-2048, 2048);
 }
 
 void PlayerDeathParticle::draw() const {
     if (lifespan > 0) {
-        DrawCircle(pos.x, pos.y - velocity.y, size, Color(52, 156, 243, colorAlpha));
+        DrawCircle(pos.x - velocity.x, pos.y - velocity.y, size, Color(52, 156, 243, colorAlpha));
     }
 }
 
 void PlayerDeathParticle::physicsUpdate() {
-    velocity.y -= 512 * physicsDelta;
-
-    if (colorAlpha > 0) {
-        colorAlpha -= physicsDelta * 500;
-    }
+    velocity.y += explosionAmountY * physicsDelta;
+    velocity.x += explosionAmountX * physicsDelta;
 
     if (lifespan > 0) {
         lifespan -= physicsDelta * 500;
         destoryParticle = false;
     } else {
         destoryParticle = true;
+    }
+
+    if (colorAlpha > 0) {
+        colorAlpha -= physicsDelta * 500;
     }
 }
