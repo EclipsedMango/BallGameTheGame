@@ -5,11 +5,12 @@
 #include "ShapeParticles.h"
 #include "../Util.h"
 
-ShapeParticles::ShapeParticles(const Vector2 shapePos, const Vector2 playerVel, const float size) {
+ShapeParticles::ShapeParticles(const Vector2 shapePos, const Vector2 playerVel, const float size, const Color color) {
     this->pos = shapePos;
     this->size = size;
     this->lifespan = 155;
     this->colorAlpha = 255;
+    this->color = color;
     this->explosionAmountY = GetRandomValue(-2048, 2048);
     this->explosionAmountX = GetRandomValue(-2048, 2048);
     this->velocity = Vector2(playerVel.x + explosionAmountX, playerVel.y + explosionAmountY);
@@ -17,7 +18,7 @@ ShapeParticles::ShapeParticles(const Vector2 shapePos, const Vector2 playerVel, 
 
 void ShapeParticles::draw() const {
     if (lifespan > 0) {
-        DrawCircleV(pos, size, Color(236, 55, 82, colorAlpha));
+        DrawCircleV(pos, size, Color(color.r, color.g, color.b, colorAlpha));
     }
 }
 

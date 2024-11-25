@@ -11,6 +11,7 @@ PlayerDeathParticle::PlayerDeathParticle(const Vector2 playerPos, const float si
     this->size = size;
     this->lifespan = 255;
     this->colorAlpha = 255;
+    this->color = color;
     this->explosionAmountY = GetRandomValue(-2048, 2048);
     this->explosionAmountX = GetRandomValue(-2048, 2048);
     this->velocity = Vector2(playerVel.x + explosionAmountX, playerVel.y + explosionAmountY);
@@ -23,6 +24,7 @@ void PlayerDeathParticle::draw() const {
 }
 
 void PlayerDeathParticle::physicsUpdate() {
+    size -= physicsDelta * 50;
     pos.x += velocity.x * 0.5f * physicsDelta;
     pos.y += velocity.y * 0.5f * physicsDelta;
 

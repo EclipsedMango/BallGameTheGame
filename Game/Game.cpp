@@ -214,7 +214,7 @@ void runGame() {
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
 
                             for (int i = 0; i < 10; ++i) {
-                                spawnShapeParticles(&particles, shape->pos, velocity);
+                                spawnShapeParticles(&particles, shape->pos, velocity, 0);
                             }
 
                             shapes.erase(shapes.begin() + i);
@@ -230,6 +230,10 @@ void runGame() {
                             displayScore = 500.0f * scoreMultiplier;
                             score += displayScore;
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
+
+                            for (int i = 0; i < 10; ++i) {
+                                spawnShapeParticles(&particles, shape->pos, velocity, 1);
+                            }
 
                             shapes.erase(shapes.begin() + i);
                             delete shape;
@@ -267,7 +271,7 @@ void runGame() {
         BeginMode2D(camera);
 
         // Velocity Preview
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && inputTimeLeft > 0.0f) {
+        if (!hasDied && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && inputTimeLeft > 0.0f) {
             Vector2 vel = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
             Vector2 pos = playerPos;
 
@@ -333,11 +337,19 @@ void spawnShape(std::vector<Shape*>* shapes, const int type) {
     }
 }
 
-void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapePos, const Vector2 playerVel) {
-    particles->push_back(new ShapeParticles(shapePos, playerVel, 15));
+void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapePos, const Vector2 playerVel, const int type) {
+    switch (type) {
+        case 0:
+            particles->push_back(new ShapeParticles(shapePos, playerVel, 15, Color(236, 55, 82)));
+            break;
+        case 1:
+            particles->push_back(new ShapeParticles(shapePos, playerVel, 10, Color(232, 184, 54)));
+            break;
+        default: printf("This particle doesn't exist\n");
+    }
 }
 
 void spawnDeathParticles(std::vector<Particle*>* particles, const Vector2 playerPos, const Vector2 playerVel) {
     particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-30, 30)),
-        GetRandomValue(playerPos.y, playerPos.y - 45)), 4, playerVel));
+        GetRandomValue(playerPos.y, playerPos.y - 45)), 10, playerVel));
 }

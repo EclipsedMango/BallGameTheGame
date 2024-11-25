@@ -9,7 +9,7 @@
 
 class ShapeParticles : public Particle {
 public:
-    explicit ShapeParticles(Vector2 shapePos, Vector2 playerVel, float size);
+    explicit ShapeParticles(Vector2 shapePos, Vector2 playerVel, float size, Color color);
 
     void draw() const override;
     void physicsUpdate() override;
