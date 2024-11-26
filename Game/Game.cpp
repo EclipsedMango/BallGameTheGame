@@ -27,7 +27,7 @@ void runGame() {
     constexpr float shapesDelta = 1.0f / 2.0f;
 
     float particleTimer = 0.0f;
-    constexpr float particleDelta = 0.03f;
+    constexpr float particleDelta = 0.01f;
 
     float deathTimer = 0.75f;
     float scoreTimer = 0.0f;
@@ -128,8 +128,12 @@ void runGame() {
         while (particleTimer > particleDelta) {
             particleTimer -= particleDelta;
 
-            if (!particles.empty()) {
-                particles.erase(particles.begin());
+            for (int i = 0; i < particles.size(); ++i) {
+                Particle* particle = particles[i];
+
+                if (!particles.empty() && particle->lifespan <= 0) {
+                    particles.erase(particles.begin());
+                }
             }
         }
 
