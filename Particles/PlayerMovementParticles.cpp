@@ -1,10 +1,10 @@
 //
-// Created by eclipsedmango on 23/11/24.
+// Created by eclipsedmango on 26/11/24.
 //
 
-#include "PlayerDeathParticle.h"
+#include "PlayerMovementParticles.h"
 
-PlayerDeathParticle::PlayerDeathParticle(const Vector2 playerPos, const float size, const Vector2 playerVel) {
+PlayerMovementParticles::PlayerMovementParticles(Vector2 playerPos, float size, Vector2 playerVel) {
     this->pos = playerPos;
     this->size = size;
     this->lifespan = 255;
@@ -15,16 +15,16 @@ PlayerDeathParticle::PlayerDeathParticle(const Vector2 playerPos, const float si
     this->velocity = Vector2(playerVel.x + explosionAmountX, playerVel.y + explosionAmountY);
 }
 
-void PlayerDeathParticle::draw() const {
+void PlayerMovementParticles::draw() const {
     if (lifespan > 0) {
-        DrawCircleV(pos, size, Color(52, 156, 243, colorAlpha));
+        DrawCircleV(pos, size, Color(255, 255, 255, colorAlpha));
     }
 }
 
-void PlayerDeathParticle::physicsUpdate() {
+void PlayerMovementParticles::physicsUpdate() {
     size -= physicsDelta * 50;
-    pos.x += velocity.x * 0.5f * physicsDelta;
-    pos.y += velocity.y * 0.5f * physicsDelta;
+    pos.x += velocity.x * 0.2f * physicsDelta;
+    pos.y += velocity.y * 0.2f * physicsDelta;
 
     if (lifespan > 0) {
         lifespan -= physicsDelta * 500;
@@ -37,3 +37,4 @@ void PlayerDeathParticle::physicsUpdate() {
         colorAlpha -= physicsDelta * 500;
     }
 }
+

@@ -43,6 +43,8 @@ add_executable(BallGameTheGame Main.cpp
         Particles/PlayerDeathParticle.cpp
         Particles/PlayerDeathParticle.h
         Particles/ShapeParticles.cpp
-        Particles/ShapeParticles.h)
+        Particles/ShapeParticles.h
+        Particles/PlayerMovementParticles.cpp
+        Particles/PlayerMovementParticles.h)
 
 target_link_libraries(BallGameTheGame raylib)

@@ -3,7 +3,6 @@
 //
 
 #include "ShapeParticles.h"
-#include "../Util.h"
 
 ShapeParticles::ShapeParticles(const Vector2 shapePos, const Vector2 playerVel, const float size, const Color color) {
     this->pos = shapePos;

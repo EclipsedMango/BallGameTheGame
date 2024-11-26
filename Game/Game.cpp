@@ -13,6 +13,7 @@
 #include "../Util.h"
 #include "../Particles/Particle.h"
 #include "../Particles/PlayerDeathParticle.h"
+#include "../Particles/PlayerMovementParticles.h"
 #include "../Particles/ShapeParticles.h"
 #include "../Shapes/GoldCircleShape.h"
 #include "../Shapes/ScoreText.h"
@@ -106,10 +107,14 @@ void runGame() {
                 timeMultiplier = 1.0f;
             }
 
-            if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+            if (!hasDied && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
                 isMouseClicked = true;
 
                 inputTimeLeft = std::max(inputTimeLeft - 0.25f, 0.0f);
+
+                for (int i = 0; i < 5; ++i) {
+                    spawnPlayerParticles(&particles, playerPos, velocity, 0);
+                }
             }
         } else if (inputTimeLeft == 0) {
             timeMultiplier = 1.0f;
@@ -222,7 +227,7 @@ void runGame() {
                             break;
                         case 1:
                             for (int i = 0; i < 15; ++i) {
-                                spawnDeathParticles(&particles, playerPos, velocity);
+                                spawnPlayerParticles(&particles, playerPos, velocity, 1);
                             }
                             hasDied = true;
                             break;
@@ -349,7 +354,15 @@ void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapeP
     }
 }
 
-void spawnDeathParticles(std::vector<Particle*>* particles, const Vector2 playerPos, const Vector2 playerVel) {
-    particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-30, 30)),
-        GetRandomValue(playerPos.y, playerPos.y - 45)), 10, playerVel));
+void spawnPlayerParticles(std::vector<Particle*>* particles, const Vector2 playerPos, const Vector2 playerVel, const int type) {
+    switch (type) {
+        case 0:
+            particles->push_back(new PlayerMovementParticles(playerPos, 8, playerVel));
+            break;
+        case 1:
+            particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-30, 30)),
+                GetRandomValue(playerPos.y, playerPos.y - 45)), 10, playerVel));
+            break;
+        default: printf("This PlayerParticle doesn't exist\n");
+    }
 }

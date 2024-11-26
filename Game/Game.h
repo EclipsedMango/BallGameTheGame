@@ -12,6 +12,6 @@ class Particle;
 void runGame();
 void spawnShape(std::vector<Shape*>*, int type);
 void spawnShapeParticles(std::vector<Particle*>* particles, Vector2 shapePos, Vector2 playerVel, int type);
-void spawnDeathParticles(std::vector<Particle*>* particles, Vector2 playerPos, Vector2 playerVel);
+void spawnPlayerParticles(std::vector<Particle*>* particles, Vector2 playerPos, Vector2 playerVel, int type);
 
 #endif //GAME_H

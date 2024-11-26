@@ -5,6 +5,7 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
 #include "raylib.h"
+#include "../Util.h"
 
 class Particle {
 public:
