@@ -7,11 +7,11 @@
 PlayerMovementParticles::PlayerMovementParticles(Vector2 playerPos, float size, Vector2 playerVel) {
     this->pos = playerPos;
     this->size = size;
-    this->lifespan = 255;
+    this->lifespan = 512;
     this->colorAlpha = 255;
     this->color = color;
-    this->explosionAmountY = GetRandomValue(-2048, 2048);
-    this->explosionAmountX = GetRandomValue(-2048, 2048);
+    this->explosionAmountY = GetRandomValue(-1048, 1048);
+    this->explosionAmountX = GetRandomValue(-2056, 2056);
     this->velocity = Vector2(playerVel.x + explosionAmountX, playerVel.y + explosionAmountY);
 }
 
@@ -22,9 +22,9 @@ void PlayerMovementParticles::draw() const {
 }
 
 void PlayerMovementParticles::physicsUpdate() {
-    size -= physicsDelta * 50;
+    size -= physicsDelta * 10;
     pos.x += velocity.x * 0.2f * physicsDelta;
-    pos.y += velocity.y * 0.2f * physicsDelta;
+    pos.y += velocity.y * 0.1f * physicsDelta;
 
     if (lifespan > 0) {
         lifespan -= physicsDelta * 500;
@@ -34,7 +34,7 @@ void PlayerMovementParticles::physicsUpdate() {
     }
 
     if (colorAlpha > 0) {
-        colorAlpha -= physicsDelta * 500;
+        colorAlpha -= physicsDelta * 255;
     }
 }
 

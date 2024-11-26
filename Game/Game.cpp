@@ -140,6 +140,10 @@ void runGame() {
         // Death Process
         if (hasDied) {
             deathTimer -= delta;
+            if (deathTimer > 0.5) {
+                camera.target = Vector2(camera.target.x + GetRandomValue(-2, 2), camera.target.y + GetRandomValue(-2, 2));
+            }
+
             if (deathTimer <= 0.0f) {
                 inMenu = true;
                 return;
@@ -166,6 +170,10 @@ void runGame() {
         // Physics Process
         while (physicsTimer > physicsDelta) {
             physicsTimer -= physicsDelta;
+
+            if (scoreSize > 64) {
+                scoreSize -= physicsDelta * 5;
+            }
 
             // Update
             if (!hasDied) {
@@ -219,6 +227,7 @@ void runGame() {
                         case 0:
                             displayScore = 100.0f * scoreMultiplier;
                             score += displayScore;
+                            scoreSize += 25;
                             spawnShape(&shapes, 0);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
 
@@ -238,6 +247,7 @@ void runGame() {
                         case 2:
                             displayScore = 500.0f * scoreMultiplier;
                             score += displayScore;
+                            scoreSize += 35;
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
 
                             for (int i = 0; i < 10; ++i) {
@@ -284,7 +294,7 @@ void runGame() {
             Vector2 vel = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
             Vector2 pos = playerPos;
 
-            constexpr int lineCount = 300;
+            constexpr int lineCount = 150;
 
             for (int i = 0; i < lineCount; ++i) {
                 vel.y += gravity * physicsDelta;
@@ -320,7 +330,7 @@ void runGame() {
 
         EndMode2D();
 
-        drawTextCentered(TextFormat("%d", score), windowWidth / 2.0f, 24, 64, RAYWHITE);
+        drawTextCentered(TextFormat("%d", score), windowWidth / 2.0f, 24, scoreSize, RAYWHITE);
         drawProgressBar(windowWidth / 2.0f, 128, 30, 600, WHITE, GRAY, inputTimeLeft);
 
         drawTextCentered(TextFormat("%d", shapes.size()), 24, 32, 20, LIME);

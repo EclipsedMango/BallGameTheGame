@@ -13,6 +13,7 @@ inline bool inMenu = true;
 inline bool hasDied = false;
 inline bool destoryParticle = false;
 inline int score = 0;
+inline int scoreSize = 64;
 
 void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color color);
 Vector2 Vector2MultiplyS(Vector2 a, float b);

@@ -7,7 +7,7 @@
 PlayerDeathParticle::PlayerDeathParticle(const Vector2 playerPos, const float size, const Vector2 playerVel) {
     this->pos = playerPos;
     this->size = size;
-    this->lifespan = 255;
+    this->lifespan = 500;
     this->colorAlpha = 255;
     this->color = color;
     this->explosionAmountY = GetRandomValue(-2048, 2048);
@@ -23,11 +23,11 @@ void PlayerDeathParticle::draw() const {
 
 void PlayerDeathParticle::physicsUpdate() {
     size -= physicsDelta * 50;
-    pos.x += velocity.x * 0.5f * physicsDelta;
-    pos.y += velocity.y * 0.5f * physicsDelta;
+    pos.x += velocity.x * 0.4f * physicsDelta;
+    pos.y += velocity.y * 0.4f * physicsDelta;
 
     if (lifespan > 0) {
-        lifespan -= physicsDelta * 500;
+        lifespan -= physicsDelta * 10;
         destoryParticle = false;
     } else {
         destoryParticle = true;
