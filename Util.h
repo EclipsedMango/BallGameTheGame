@@ -15,6 +15,8 @@ inline bool destoryParticle = false;
 inline int score = 0;
 inline int scoreSize = 64;
 
+inline auto playerColor = Color(52, 156, 243, 255);
+
 void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color color);
 Vector2 Vector2MultiplyS(Vector2 a, float b);
 void drawProgressBar(int posX, int posY, int height, int width, Color fillColor, Color emptyColor, float progress);

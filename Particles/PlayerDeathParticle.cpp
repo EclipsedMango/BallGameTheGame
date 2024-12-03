@@ -17,7 +17,7 @@ PlayerDeathParticle::PlayerDeathParticle(const Vector2 playerPos, const float si
 
 void PlayerDeathParticle::draw() const {
     if (lifespan > 0) {
-        DrawCircleV(pos, size, Color(52, 156, 243, colorAlpha));
+        DrawCircleV(pos, size, Color(playerColor.r, playerColor.g, playerColor.b, colorAlpha));
     }
 }
 

@@ -137,6 +137,11 @@ void runGame() {
             }
         }
 
+        if (IsKeyPressed(KEY_R)) {
+            inMenu = true;
+            return;
+        }
+
         // Death Process
         if (hasDied) {
             deathTimer -= delta;
@@ -316,7 +321,7 @@ void runGame() {
 
         // Player
         if (!hasDied) {
-            DrawCircleV(playerPos, playerRadius, Color(52, 156, 243, 255));
+            DrawCircleV(playerPos, playerRadius, playerColor);
         }
 
         // Floor
