@@ -11,6 +11,10 @@ void mainMenu() {
     Color buttonColor;
     char *buttonLabel = "Play";
 
+    auto colorButton1Color = Color(252, 152, 3, 255);
+    auto colorButton2Color = Color(52, 156, 243, 255);
+    auto colorButton3Color = Color(127, 5, 235, 255);
+
     while (!WindowShouldClose()) {
         const float button1X = (windowWidth - MeasureText(buttonLabel, 64)) / 2.0f;
         const float button1Y = (windowHeight - 2.0f) / 2.0f;
@@ -32,24 +36,38 @@ void mainMenu() {
             buttonColor = Color(255, 255, 255, 255);
         }
 
+        // Color Select Buttons
         if (GetMouseX() > colorSelectButtonsX - 200 && GetMouseX() < colorSelectButtonsX - 200 + 100
             && GetMouseY() > colorSelectButtonsY + 350 && GetMouseY() < colorSelectButtonsY + 350 + 100) {
+            colorButton1Color = Color(250, 174, 60, 255);
 
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+                colorButton1Color = Color(219, 133, 2, 255);
+            } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
                 playerColor = Color(252, 152, 3, 255);
             }
         } else if (GetMouseX() > colorSelectButtonsX - 50 && GetMouseX() < colorSelectButtonsX - 50 + 100
             && GetMouseY() > colorSelectButtonsY + 350 && GetMouseY() < colorSelectButtonsY + 350 + 100) {
+            colorButton2Color = Color(91, 175, 245, 255);
 
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+                colorButton2Color = Color(7, 125, 224, 255);
+            } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
                 playerColor = Color(52, 156, 243, 255);
             }
         } else if (GetMouseX() > colorSelectButtonsX + 100 && GetMouseX() < colorSelectButtonsX + 100 + 100
             && GetMouseY() > colorSelectButtonsY + 350 && GetMouseY() < colorSelectButtonsY + 350 + 100) {
+            colorButton3Color = Color(151, 42, 247, 255);
 
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+                colorButton3Color = Color(113, 2, 212, 255);
+            } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
                 playerColor = Color(127, 5, 235, 255);
             }
+        } else {
+            colorButton1Color = Color(252, 152, 3, 255);
+            colorButton2Color = Color(52, 156, 243, 255);
+            colorButton3Color = Color(127, 5, 235, 255);
         }
 
         if (!inMenu) {
@@ -78,9 +96,9 @@ void mainMenu() {
         drawTextCentered(buttonLabel, windowWidth / 2.0f, windowHeight / 2.0f, 64, buttonColor);
 
         // Color Selectors
-        DrawRectangle(windowWidth / 2.0 - 200, windowHeight / 2.0 + 350, 100, 100, Color(252, 152, 3, 255));
-        DrawRectangle(windowWidth / 2.0 - 50, windowHeight / 2.0 + 350, 100, 100, Color(52, 156, 243, 255));
-        DrawRectangle(windowWidth / 2.0 + 100, windowHeight / 2.0 + 350, 100, 100, Color(127, 5, 235, 255));
+        DrawRectangle(windowWidth / 2.0 - 200, windowHeight / 2.0 + 350, 100, 100, colorButton1Color);
+        DrawRectangle(windowWidth / 2.0 - 50, windowHeight / 2.0 + 350, 100, 100, colorButton2Color);
+        DrawRectangle(windowWidth / 2.0 + 100, windowHeight / 2.0 + 350, 100, 100, colorButton3Color);
 
         EndDrawing();
     }
