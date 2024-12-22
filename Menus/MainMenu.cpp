@@ -4,12 +4,15 @@
 
 #include "MainMenu.h"
 
+#include <cstring>
+
 #include "raylib.h"
 #include "../Util.h"
 
 void mainMenu() {
     Color buttonColor;
     char *buttonLabel = "Play";
+    const Texture2D plusTexture = LoadTexture("Plus.png");
 
     auto colorButton1Color = Color(252, 152, 3, 255);
     auto colorButton2Color = Color(52, 156, 243, 255);
@@ -70,6 +73,16 @@ void mainMenu() {
             colorButton3Color = Color(127, 5, 235, 255);
         }
 
+        if (GetMouseX() > windowWidth / 1.25 && GetMouseX() < windowWidth / 1.25 + 40
+            && GetMouseY() > windowHeight / 2.0 + 150 && GetMouseY() < windowHeight / 2.0 + 188) {
+
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+
+            } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+                scoreMultiplierMax += 1;
+            }
+        }
+
         if (!inMenu) {
             return;
         }
@@ -94,6 +107,12 @@ void mainMenu() {
 
         // Buttons
         drawTextCentered(buttonLabel, windowWidth / 2.0f, windowHeight / 2.0f, 64, buttonColor);
+
+        // Options Buttons
+        //DrawRectangle(windowWidth / 1.25, windowHeight / 2.0 + 150, 50, 50, WHITE);
+        drawTextCentered("Combo Size", windowWidth / 1.235, windowHeight / 2.0 + 50, 40, WHITE);
+        drawTextCentered(TextFormat("%.0f", scoreMultiplierMax), windowWidth / 1.235, windowHeight / 2.0 + 100, 34, WHITE);
+        DrawTextureEx(plusTexture, Vector2(windowWidth / 1.25, windowHeight / 2.0 + 150), 0, 0.075, WHITE);
 
         // Color Selectors
         DrawRectangle(windowWidth / 2.0 - 200, windowHeight / 2.0 + 350, 100, 100, colorButton1Color);

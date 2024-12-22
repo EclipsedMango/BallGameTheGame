@@ -5,6 +5,7 @@
 #include "Game.h"
 
 #include <cstdio>
+#include <unistd.h>
 #include <vector>
 
 #include "raylib.h"
@@ -49,7 +50,6 @@ void runGame() {
     // Player Related Info
     float displayScore = 0;
     float scoreMultiplier = 1.0f;
-    float scoreMultiplierMax = 8.0f;
     score = 0;
 
     float timeMultiplier = 1.0f;
@@ -82,9 +82,14 @@ void runGame() {
     BeginDrawing();
     EndDrawing();
 
+    SetExitKey(KEY_NULL);
+
     // Main game loop
-    // Detect window close button or ESC key
     while (!WindowShouldClose()) {
+        if (isPaused) {
+            timeMultiplier = 0.0f;
+        }
+
         const float delta = GetFrameTime();
         physicsTimer += delta * timeMultiplier;
         shapeSpawnTimer += delta * timeMultiplier;
@@ -98,6 +103,10 @@ void runGame() {
 
             camera.offset = Vector2(windowWidth / 2.0f, windowHeight / 2.0f);
             camera.zoom = 1.25f * (windowHeight / 1080.0f);
+        }
+
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            isPaused = !isPaused;
         }
 
         if (inputTimeLeft > 0.0f) {
@@ -265,16 +274,17 @@ void runGame() {
                         default: break;
                     }
 
-                    velocity.y = -1000.0;
-                    velocity.x = velocity.x * 0.5f;
+                    if (!hasDied) {
+                        velocity.y = -1000.0;
+                        velocity.x = velocity.x * 0.5f;
 
-                    scoreTimer = 1.5f;
-                    inputTimeLeft = std::min(inputTimeLeft + 0.5f, 1.0f);
+                        scoreTimer = 1.5f;
+                        inputTimeLeft = std::min(inputTimeLeft + 0.5f, 1.0f);
 
-                    if (scoreMultiplier < scoreMultiplierMax) {
-                        scoreMultiplier++;
+                        if (scoreMultiplier < scoreMultiplierMax) {
+                            scoreMultiplier++;
+                        }
                     }
-
                     break;
                 }
             }

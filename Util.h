@@ -9,11 +9,15 @@
 inline int windowWidth = 1920;
 inline int windowHeight = 1080;
 constexpr float physicsDelta = 1.0f / 240.0f;
+
 inline bool inMenu = true;
+inline bool isPaused = false;
 inline bool hasDied = false;
 inline bool destoryParticle = false;
+
 inline int score = 0;
 inline int scoreSize = 64;
+inline float scoreMultiplierMax = 8.0f;
 
 inline auto playerColor = Color(52, 156, 243, 255);
 
