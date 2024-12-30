@@ -6,6 +6,5 @@
 #define MAINMENU_H
 
 void mainMenu();
-void checkRegion();
 
 #endif //MAINMENU_H
