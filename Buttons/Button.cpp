@@ -4,6 +4,7 @@
 
 #include "Button.h"
 
+#include "raymath.h"
 #include "../Util.h"
 
 Button::Button(const Vector2 buttonPos, const Vector2 buttonSize, const int fontSize, const Color color, const Color fontColor, const std::string& buttonLabel) {
@@ -19,7 +20,9 @@ Button::Button(const Vector2 buttonPos, const Vector2 buttonSize, const int font
 }
 
 bool Button::checkButtonRegion() {
-    if (GetMouseX() < pos.x + size.x / 2.0 && GetMouseX() > pos.x - size.x / 2.0 && GetMouseY() < pos.y + size.y / 2.0 && GetMouseY() > pos.y - size.y / 2.0) {
+    Vector2 centeredPos = getScreenPos();
+
+    if (GetMouseX() < centeredPos.x + size.x / 2.0 && GetMouseX() > centeredPos.x - size.x / 2.0 && GetMouseY() < centeredPos.y + size.y / 2.0 && GetMouseY() > centeredPos.y - size.y / 2.0) {
         color = colorHover;
 
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -36,8 +39,14 @@ bool Button::checkButtonRegion() {
 }
 
 void Button::draw() const {
-    DrawRectangle(pos.x - size.x / 2.0, pos.y - size.y / 2.0, size.x, size.y, color);
-    drawTextCentered(label.c_str(), pos.x, pos.y - size.y / 2.0 + 2.0, fontSize, fontColor);
+    Vector2 centeredPos = getScreenPos();
+    DrawRectangle(centeredPos.x - size.x / 2.0, centeredPos.y - size.y / 2.0, size.x, size.y, color);
+    drawTextCentered(label.c_str(), centeredPos.x, centeredPos.y - size.y / 2.0 + 2.0, fontSize, fontColor);
 }
+
+Vector2 Button::getScreenPos() const {
+    return Vector2Add(pos, Vector2(windowWidth / 2.0, windowHeight / 2.0));
+}
+
 
 

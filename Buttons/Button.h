@@ -12,7 +12,7 @@
 
 class Button {
 public:
-    virtual ~Button() = default;
+    ~Button() = default;
 
     Button(Vector2 buttonPos, Vector2 buttonSize, int fontSize, Color color, Color fontColor, const std::string& buttonLabel);
 
@@ -26,8 +26,9 @@ public:
     Color colorHover;
     Color colorPress;
 
-    virtual bool checkButtonRegion();
-    virtual void draw() const;
+    bool checkButtonRegion();
+    void draw() const;
+    Vector2 getScreenPos() const;
 };
 
 
