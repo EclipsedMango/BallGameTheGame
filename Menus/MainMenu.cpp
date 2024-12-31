@@ -24,13 +24,13 @@ void mainMenu() {
         Vector2(playButtonSizeX, 72), 64, Color(40, 44, 52, 255), WHITE, playButtonLabel);
 
     auto *colorButton1 = new Button(Vector2(-150, 400),
-        Vector2(100, 100), 0, Color(252, 152, 3, 255), WHITE, "");
+        Vector2(100, 100), 0, Color(67, 222, 108, 255), WHITE, "");
 
     auto *colorButton2 = new Button(Vector2(0, 400),
         Vector2(100, 100), 0, Color(52, 156, 243, 255), WHITE, "");
 
     auto *colorButton3 = new Button(Vector2(150, 400),
-        Vector2(100, 100), 0, Color(127, 5, 235, 255), WHITE, "");
+        Vector2(100, 100), 0, Color(194, 74, 237, 255), WHITE, "");
 
     auto *scoreMultiplierButton = new Button(Vector2(500, 170),
         Vector2(40, 40), 0, Color(40, 44, 52, 255), WHITE, "");
@@ -56,15 +56,18 @@ void mainMenu() {
 
         // Color Buttons
         if (colorButton1->checkButtonRegion()) {
-            playerColor = Color(252, 152, 3, 255);
+            playerColor = Color(67, 222, 108, 255);
+            playerColorOutline = Color(49, 120, 54, 255);
         }
 
         if (colorButton2->checkButtonRegion()) {
             playerColor = Color(52, 156, 243, 255);
+            playerColorOutline = Color(31, 104, 150, 255);
         }
 
         if (colorButton3->checkButtonRegion()) {
-            playerColor = Color(127, 5, 235, 255);
+            playerColor = Color(194, 74, 237, 255);
+            playerColorOutline = Color(94, 50, 125, 255);
         }
 
         if (scoreMultiplierButton->checkButtonRegion()) {

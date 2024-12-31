@@ -20,6 +20,7 @@ inline int scoreSize = 64;
 inline float scoreMultiplierMax = 8.0f;
 
 inline auto playerColor = Color(52, 156, 243, 255);
+inline auto playerColorOutline = Color(31, 104, 150, 255);
 
 void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color color);
 Vector2 Vector2MultiplyS(Vector2 a, float b);

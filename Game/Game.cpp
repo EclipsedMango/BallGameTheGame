@@ -36,7 +36,7 @@ void runGame() {
 
     // Player Attributes
     constexpr auto playerStartingPos = Vector2(0, 540);
-    constexpr float playerRadius = 15.0f;
+    constexpr float playerRadius = 20.0f;
     constexpr float gravity = 2048.0f;
     constexpr float playerSpeed = 3.0f;
 
@@ -212,23 +212,23 @@ void runGame() {
             }
 
             // Floor and Ceiling Collision
-            if (playerPos.y > 1000 - 15) {
-                playerPos.y = 1000 - 15;
+            if (playerPos.y > 1000 - playerRadius) {
+                playerPos.y = 1000 - playerRadius;
                 velocity.y = -velocity.y * 0.75f;
                 velocity.x = velocity.x * 0.99f;
 
                 inputTimeLeft = 1.0f;
-            } else if (playerPos.y < -1480 - 15) {
-                playerPos.y = -1480 - 15;
+            } else if (playerPos.y < -1480 - playerRadius) {
+                playerPos.y = -1480 - playerRadius;
                 velocity.y = -velocity.y * 0.75f;
             }
 
             // Wall Collision
-            if (playerPos.x > 3000 - 15) {
-                playerPos.x = 3000 - 15;
+            if (playerPos.x > 3000 - playerRadius) {
+                playerPos.x = 3000 - playerRadius;
                 velocity.x = -velocity.x * 0.75f;
-            } else if (playerPos.x < -3000 + 15) {
-                playerPos.x = -3000 + 15;
+            } else if (playerPos.x < -3000 + playerRadius) {
+                playerPos.x = -3000 + playerRadius;
                 velocity.x = -velocity.x * 0.75f;
             }
 
@@ -331,7 +331,8 @@ void runGame() {
 
         // Player
         if (!hasDied) {
-            DrawCircleV(playerPos, playerRadius, playerColor);
+            DrawCircle(playerPos.x, playerPos.y, 20, playerColorOutline);
+            DrawCircle(playerPos.x, playerPos.y, 16, playerColor);
         }
 
         // Floor
