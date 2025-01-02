@@ -31,14 +31,6 @@ void mainMenu() {
     const Texture2D exitHoverTexture = LoadTexture("ExitHighlight.png");
     const Texture2D exitPressTexture = LoadTexture("ExitPress.png");
 
-    std::string playButtonLabel = "Play";
-    float playButtonSizeX = 155;
-
-    if (hasDied) {
-        playButtonLabel = "Play Again";
-        playButtonSizeX = 350;
-    }
-
     std::printf("test\n");
 
     auto *playButton = new TextureButton(Vector2(0, -150), Vector2(242, 92), playTexture, playHoverTexture, playPressTexture);
