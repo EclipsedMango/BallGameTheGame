@@ -47,6 +47,10 @@ add_executable(BallGameTheGame Main.cpp
         Particles/PlayerMovementParticles.cpp
         Particles/PlayerMovementParticles.h
         Buttons/Button.cpp
-        Buttons/Button.h)
+        Buttons/Button.h
+        Buttons/TextureButton.cpp
+        Buttons/TextureButton.h
+        Buttons/RegularButton.cpp
+        Buttons/RegularButton.h)
 
 target_link_libraries(BallGameTheGame raylib)

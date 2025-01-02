@@ -12,5 +12,6 @@ GoldCircleShape::GoldCircleShape(const Vector2 randomPos) {
 }
 
 void GoldCircleShape::draw() const {
-    DrawCircle(pos.x, pos.y, radius, Color(232, 184, 54, 255));
+    DrawCircle(pos.x, pos.y, radius, Color(145, 108, 32, 255));
+    DrawCircle(pos.x, pos.y, radius - 4, Color(232, 184, 54, 255));
 }

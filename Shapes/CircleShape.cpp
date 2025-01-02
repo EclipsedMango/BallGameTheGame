@@ -11,5 +11,6 @@ CircleShape::CircleShape(const Vector2 randomPos) {
 }
 
 void CircleShape::draw() const {
-    DrawCircle(pos.x, pos.y, radius, Color(236, 55, 82, 255));
+    DrawCircle(pos.x, pos.y, radius, Color(138, 36, 60, 255));
+    DrawCircle(pos.x, pos.y, radius - 4, Color(236, 55, 82, 255));
 }

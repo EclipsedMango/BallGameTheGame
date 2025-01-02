@@ -12,23 +12,22 @@
 
 class Button {
 public:
-    ~Button() = default;
-
-    Button(Vector2 buttonPos, Vector2 buttonSize, int fontSize, Color color, Color fontColor, const std::string& buttonLabel);
+    virtual ~Button() = default;
 
     Vector2 pos = {};
     Vector2 size = {};
     std::string label;
     int fontSize = 16;
     Color fontColor = Color(0, 0, 0, 255);
-    Color color;
-    Color colorOriginal;
-    Color colorHover;
-    Color colorPress;
+    Color color = Color(0, 0, 0, 255);
+    Color colorOriginal = Color(0, 0, 0, 255);
+    Color colorHover = Color(0, 0, 0, 255);
+    Color colorPress = Color(0, 0, 0, 255);
 
-    bool checkButtonRegion();
-    void draw() const;
-    Vector2 getScreenPos() const;
+    virtual bool checkButtonRegion();
+    virtual void draw() const;
+    virtual Vector2 getScreenPos() const;
+    Button();
 };
 
 

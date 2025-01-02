@@ -12,7 +12,7 @@ int main() {
 
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose() && !shouldGameClose) {
         if (inMenu) {
             mainMenu();
         } else {

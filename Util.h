@@ -10,6 +10,8 @@ inline int windowWidth = 1920;
 inline int windowHeight = 1080;
 constexpr float physicsDelta = 1.0f / 240.0f;
 
+inline bool shouldGameClose = false;
+
 inline bool inMenu = true;
 inline bool isPaused = false;
 inline bool hasDied = false;
