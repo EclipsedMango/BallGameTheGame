@@ -12,7 +12,6 @@
 
 void mainMenu() {
     // Initialize Textures from resource file.
-    const Texture2D plusTexture = LoadTexture("PlusSmaller.png");
     const Texture2D titleTexture = LoadTexture("Title.png");
 
     const Texture2D playTexture = LoadTexture("Play.png");
@@ -31,22 +30,12 @@ void mainMenu() {
     const Texture2D exitHoverTexture = LoadTexture("ExitHighlight.png");
     const Texture2D exitPressTexture = LoadTexture("ExitPress.png");
 
-    std::printf("test\n");
+    std::printf("MainMenuTest\n");
 
     auto *playButton = new TextureButton(Vector2(0, -150), Vector2(242, 92), playTexture, playHoverTexture, playPressTexture);
     auto *upgradeButton = new TextureButton(Vector2(0, -0), Vector2(353, 92), upgradesTexture, upgradesHoverTexture, upgradesPressTexture);
     auto *optionsButton = new TextureButton(Vector2(0, 150), Vector2(320, 92), optionsTexture, optionsHoverTexture, optionsPressTexture);
     auto *exitButton = new TextureButton(Vector2(0, 300), Vector2(242, 92), exitTexture, exitHoverTexture, exitPressTexture);
-
-    auto *colorButton1 = new RegularButton(Vector2(-150, 400),
-        Vector2(100, 100), 0, Color(67, 222, 108, 255), WHITE, "");
-    auto *colorButton2 = new RegularButton(Vector2(0, 400),
-        Vector2(100, 100), 0, Color(52, 156, 243, 255), WHITE, "");
-    auto *colorButton3 = new RegularButton(Vector2(150, 400),
-        Vector2(100, 100), 0, Color(194, 74, 237, 255), WHITE, "");
-
-    auto *scoreMultiplierButton = new RegularButton(Vector2(500, 170),
-        Vector2(40, 40), 0, Color(40, 44, 52, 255), WHITE, "");
 
     while (!WindowShouldClose()) {
         if (!inMenu) {
@@ -55,10 +44,6 @@ void mainMenu() {
             delete optionsButton;
             delete exitButton;
 
-            delete colorButton1;
-            delete colorButton2;
-            delete colorButton3;
-            delete scoreMultiplierButton;
             return;
         }
 
@@ -69,10 +54,12 @@ void mainMenu() {
 
         if (playButton->checkButtonRegion()) {
             inMenu = false;
+            inUpgradeMenu = false;
         }
 
         if (upgradeButton->checkButtonRegion()) {
-            printf("open upgrade menu\n");
+            inMenu = false;
+            inUpgradeMenu = true;
         }
 
         if (optionsButton->checkButtonRegion()) {
@@ -82,26 +69,6 @@ void mainMenu() {
         if (exitButton->checkButtonRegion()) {
             shouldGameClose = true;
             return;
-        }
-
-        // Color Buttons
-        if (colorButton1->checkButtonRegion()) {
-            playerColor = Color(67, 222, 108, 255);
-            playerColorOutline = Color(49, 120, 54, 255);
-        }
-
-        if (colorButton2->checkButtonRegion()) {
-            playerColor = Color(52, 156, 243, 255);
-            playerColorOutline = Color(31, 104, 150, 255);
-        }
-
-        if (colorButton3->checkButtonRegion()) {
-            playerColor = Color(194, 74, 237, 255);
-            playerColorOutline = Color(94, 50, 125, 255);
-        }
-
-        if (scoreMultiplierButton->checkButtonRegion()) {
-            scoreMultiplierMax += 1;
         }
 
         if (hasDied) {
@@ -120,15 +87,6 @@ void mainMenu() {
         upgradeButton->draw();
         optionsButton->draw();
         exitButton->draw();
-
-        colorButton1->draw();
-        colorButton2->draw();
-        colorButton3->draw();
-        scoreMultiplierButton->draw();
-
-        drawTextCentered("Combo Size", windowWidth / 2.0 + 500, windowHeight / 2.0 + 50, 40, WHITE);
-        drawTextCentered(TextFormat("%.0f", scoreMultiplierMax), windowWidth / 2.0 + 500, windowHeight / 2.0 + 100, 34, WHITE);
-        DrawTextureEx(plusTexture, Vector2(windowWidth / 2.0 + 480, windowHeight / 2.0 + 150), 0, 0.1, WHITE);
 
         EndDrawing();
     }

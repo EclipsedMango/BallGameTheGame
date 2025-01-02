@@ -2,6 +2,7 @@
 #include "Util.h"
 #include "Game/Game.h"
 #include "Menus/MainMenu.h"
+#include "Menus/UpgradeMenu.h"
 
 int main() {
     // Initialization
@@ -15,6 +16,8 @@ int main() {
     while (!WindowShouldClose() && !shouldGameClose) {
         if (inMenu) {
             mainMenu();
+        } else if (inUpgradeMenu) {
+            upgradeMenu();
         } else {
             runGame();
         }

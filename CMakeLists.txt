@@ -51,6 +51,8 @@ add_executable(BallGameTheGame Main.cpp
         Buttons/TextureButton.cpp
         Buttons/TextureButton.h
         Buttons/RegularButton.cpp
-        Buttons/RegularButton.h)
+        Buttons/RegularButton.h
+        Menus/UpgradeMenu.cpp
+        Menus/UpgradeMenu.h)
 
 target_link_libraries(BallGameTheGame raylib)

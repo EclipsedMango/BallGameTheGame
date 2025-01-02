@@ -13,6 +13,7 @@ constexpr float physicsDelta = 1.0f / 240.0f;
 inline bool shouldGameClose = false;
 
 inline bool inMenu = true;
+inline bool inUpgradeMenu = false;
 inline bool isPaused = false;
 inline bool hasDied = false;
 inline bool destoryParticle = false;
