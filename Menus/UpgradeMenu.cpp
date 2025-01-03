@@ -14,6 +14,12 @@ void upgradeMenu() {
 
     const Texture2D plusTexture = LoadTexture("PlusSmaller.png");
 
+    const Texture2D backTexture = LoadTexture("Back.png");
+    const Texture2D backHoverTexture = LoadTexture("BackHighlight.png");
+    const Texture2D backPressTexture = LoadTexture("BackPress.png");
+
+    auto *backButton = new TextureButton(Vector2(-890, -450), Vector2(73, 74), backTexture, backHoverTexture, backPressTexture);
+
     auto *colorButton1 = new RegularButton(Vector2(-150, 400),
         Vector2(100, 100), 0, Color(67, 222, 108, 255), WHITE, "");
     auto *colorButton2 = new RegularButton(Vector2(0, 400),
@@ -26,9 +32,12 @@ void upgradeMenu() {
 
     while(!WindowShouldClose()) {
         if (!inUpgradeMenu) {
+            delete backButton;
+
             delete colorButton1;
             delete colorButton2;
             delete colorButton3;
+
             delete scoreMultiplierButton;
 
             return;
@@ -40,6 +49,11 @@ void upgradeMenu() {
         }
 
         if (IsKeyPressed(KEY_R)) {
+            inMenu = true;
+            return;
+        }
+
+        if (backButton->checkButtonRegion()) {
             inMenu = true;
             return;
         }
@@ -68,9 +82,12 @@ void upgradeMenu() {
         ClearBackground(Color(40, 44, 52, 255));
         DrawFPS(6, 6);
 
+        backButton->draw();
+
         colorButton1->draw();
         colorButton2->draw();
         colorButton3->draw();
+
         scoreMultiplierButton->draw();
 
         drawTextCentered("Combo Size", windowWidth / 2.0 + 500, windowHeight / 2.0 + 50, 40, WHITE);
