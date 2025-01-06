@@ -4,7 +4,10 @@
 
 #ifndef UTIL_H
 #define UTIL_H
+#include <vector>
+
 #include "raylib.h"
+#include "Shapes/Shape.h"
 
 inline int windowWidth = 1920;
 inline int windowHeight = 1080;
@@ -31,5 +34,6 @@ void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color 
 Vector2 Vector2MultiplyS(Vector2 a, float b);
 void drawProgressBar(int posX, int posY, int height, int width, Color fillColor, Color emptyColor, float progress);
 float colorClamp(float colorValue);
+bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape);
 
 #endif //UTIL_H

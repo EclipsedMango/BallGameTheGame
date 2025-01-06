@@ -67,15 +67,15 @@ void runGame() {
     camera.rotation = 0.0f;
     camera.zoom = 1.25f * (windowHeight / 1080.0f);
 
-    for (int i = 0; i < 75; ++i) {
-        spawnShape(&shapes, 0);
+    for (int i = 0; i < 75; i++) {
+        trySpawnShape(&shapes, 0);
 
         if (i < 15) {
-            spawnShape(&shapes, 1);
+            trySpawnShape(&shapes, 1);
         }
 
         if (i < 2) {
-            spawnShape(&shapes, 2);
+            trySpawnShape(&shapes, 2);
         }
     }
 
@@ -171,15 +171,15 @@ void runGame() {
             shapeSpawnTimer -= shapesDelta;
 
             if (GetRandomValue(0, 8) == 0) {
-                spawnShape(&shapes, 0);
+                trySpawnShape(&shapes, 0);
             }
 
             if (GetRandomValue(0, 24) == 0) {
-                spawnShape(&shapes, 1);
+                trySpawnShape(&shapes, 1);
             }
 
             if (GetRandomValue(0, 32) == 0) {
-                spawnShape(&shapes, 2);
+                trySpawnShape(&shapes, 2);
             }
         }
 
@@ -197,11 +197,11 @@ void runGame() {
                 playerPos = Vector2Add(playerPos, Vector2MultiplyS(velocity, physicsDelta));
             }
 
-            for (const auto shape: shapes) {
+            for (Shape* shape: shapes) {
                 shape->physicsUpdate();
             }
 
-            for (const auto particle: particles) {
+            for (Particle* particle: particles) {
                 particle->physicsUpdate();
             }
 
@@ -244,7 +244,7 @@ void runGame() {
                             displayScore = 100.0f * scoreMultiplier;
                             score += displayScore;
                             scoreSize += 25;
-                            spawnShape(&shapes, 0);
+                            trySpawnShape(&shapes, 0);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
 
                             for (int i = 0; i < 10; ++i) {
@@ -322,12 +322,12 @@ void runGame() {
         }
 
         // Draw Particles
-        for (auto particle: particles) {
+        for (Particle* particle: particles) {
             particle->draw();
         }
 
         // Draw Shapes
-        for (auto shape: shapes) {
+        for (Shape* shape: shapes) {
             shape->draw();
         }
 
@@ -359,19 +359,28 @@ void runGame() {
     }
 }
 
-void spawnShape(std::vector<Shape*>* shapes, const int type) {
+bool trySpawnShape(std::vector<Shape*>* shapes, const int type) {
+    Shape* shape;
+
     switch (type) {
         case 0:
-            shapes->push_back(new CircleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980))));
+            shape = new CircleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
             break;
         case 1:
-            shapes->push_back(new TriangleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980))));
+            shape = new TriangleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
             break;
         case 2:
-            shapes->push_back(new GoldCircleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980))));
+            shape = new GoldCircleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
             break;
-        default: printf("This shape doesn't exist\n");
+        default: return false;
     }
+
+    if (!checkOverlapShape(*shapes, shape)) {
+        shapes->push_back(shape);
+        return true;
+    }
+
+    return false;
 }
 
 void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapePos, const Vector2 playerVel, const int type) {
