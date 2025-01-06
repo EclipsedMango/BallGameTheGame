@@ -7,6 +7,7 @@
 int main() {
     // Initialization
     const int monitor = GetCurrentMonitor();
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
 
     InitWindow(windowWidth, windowHeight, "Ball Game The Game");
     SetWindowMonitor(monitor);

@@ -10,6 +10,7 @@ class CircleShape : public Shape {
 public:
     explicit CircleShape(Vector2 randomPos);
     void draw() const override;
+    float findRandomfloat(float min, float max);
     CircleShape() = default;
 };
 

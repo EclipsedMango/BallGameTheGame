@@ -74,8 +74,9 @@ void upgradeMenu() {
             playerColorOutline = Color(94, 50, 125, 255);
         }
 
-        if (scoreMultiplierButton->checkButtonRegion()) {
+        if (scoreMultiplierButton->checkButtonRegion() && money >= 5500) {
             scoreMultiplierMax += 1;
+            money -= 5500;
         }
 
         BeginDrawing();
@@ -89,6 +90,9 @@ void upgradeMenu() {
         colorButton3->draw();
 
         scoreMultiplierButton->draw();
+
+        drawTextCentered("Money:", windowWidth / 2.0, windowHeight / 2.0 - 500, 65, WHITE);
+        drawTextCentered(TextFormat("%d", money), windowWidth / 2.0, windowHeight / 2.0 - 400, 55, WHITE);
 
         drawTextCentered("Combo Size", windowWidth / 2.0 + 500, windowHeight / 2.0 + 50, 40, WHITE);
         drawTextCentered(TextFormat("%.0f", scoreMultiplierMax), windowWidth / 2.0 + 500, windowHeight / 2.0 + 100, 34, WHITE);

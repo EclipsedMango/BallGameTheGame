@@ -158,6 +158,8 @@ void runGame() {
                 camera.target = Vector2(camera.target.x + GetRandomValue(-2, 2), camera.target.y + GetRandomValue(-2, 2));
             }
 
+            money = score;
+
             if (deathTimer <= 0.0f) {
                 inMenu = true;
                 return;

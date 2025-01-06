@@ -11,7 +11,7 @@
 #include "../Buttons/TextureButton.h"
 
 void mainMenu() {
-    // Initialize Textures from resource file.
+    // Initialize Textures from resources file.
     const Texture2D titleTexture = LoadTexture("Title.png");
 
     const Texture2D playTexture = LoadTexture("Play.png");
