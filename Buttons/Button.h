@@ -18,6 +18,7 @@ public:
     Vector2 size = {};
     std::string label;
     int fontSize = 16;
+    float scale = 1.0;
     Color fontColor = Color(0, 0, 0, 255);
     Color color = Color(0, 0, 0, 255);
     Color colorOriginal = Color(0, 0, 0, 255);

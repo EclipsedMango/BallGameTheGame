@@ -24,13 +24,16 @@ bool RegularButton::checkButtonRegion() {
 
     if (GetMouseX() < centeredPos.x + size.x / 2.0 && GetMouseX() > centeredPos.x - size.x / 2.0 && GetMouseY() < centeredPos.y + size.y / 2.0 && GetMouseY() > centeredPos.y - size.y / 2.0) {
         color = colorHover;
+        scale = 1.05;
 
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             color = colorPress;
+            scale = 0.98;
         } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
             return true;
         }
     } else {
+        scale = 1.0;
         color = colorOriginal;
         return false;
     }
@@ -40,7 +43,7 @@ bool RegularButton::checkButtonRegion() {
 
 void RegularButton::draw() const {
     Vector2 centeredPos = getScreenPos();
-    DrawRectangle(centeredPos.x - size.x / 2.0, centeredPos.y - size.y / 2.0, size.x, size.y, color);
-    drawTextCentered(label.c_str(), centeredPos.x, centeredPos.y - size.y / 2.0 + 2.0, fontSize, fontColor);
+    DrawRectangle(centeredPos.x - size.x / 2.0 * scale, centeredPos.y - size.y / 2.0 * scale, size.x, size.y, color);
+    drawTextCentered(label.c_str(), centeredPos.x, centeredPos.y - size.y / 2.0 + 2.0, fontSize * scale, fontColor);
 }
 

@@ -17,6 +17,7 @@ TextureButton::TextureButton(const Vector2 buttonPos, const Vector2 buttonSize, 
     this->textureOriginal = textureOriginal;
     this->textureHover = textureHover;
     this->texturePress = texturePress;
+    this->scale = scale;
 }
 
 bool TextureButton::checkButtonRegion() {
@@ -24,14 +25,17 @@ bool TextureButton::checkButtonRegion() {
 
     if (GetMouseX() < centeredPos.x + size.x / 2.0 && GetMouseX() > centeredPos.x - size.x / 2.0 && GetMouseY() < centeredPos.y + size.y / 2.0 && GetMouseY() > centeredPos.y - size.y / 2.0) {
         texture = textureHover;
+        scale = 1.05;
 
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             texture = texturePress;
+            scale = 0.98;
         } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
             return true;
         }
     } else {
         texture = textureOriginal;
+        scale = 1.0;
         return false;
     }
 
@@ -40,7 +44,7 @@ bool TextureButton::checkButtonRegion() {
 
 void TextureButton::draw() const {
     Vector2 centeredPos = getScreenPos();
-    DrawTextureEx(texture, Vector2(centeredPos.x - size.x / 2.0, centeredPos.y - size.y / 2.0), 0, 1, WHITE);
+    DrawTextureEx(texture, Vector2(centeredPos.x - size.x / 2.0 * scale, centeredPos.y - size.y / 2.0 * scale), 0, scale, WHITE);
 }
 
 
