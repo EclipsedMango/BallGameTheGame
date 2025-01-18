@@ -13,6 +13,9 @@ public:
     Vector2 pos = {};
     float radius = 0;
     int type = 0;
+    int lifeSpan = 255;
+    bool isDead = false;
+    bool destoryShape = false;
     bool killYourSelf = false;
 
     virtual void draw() const;

@@ -13,7 +13,7 @@ ScoreText::ScoreText(const Vector2 pos, const float displayScore) {
 }
 
 void ScoreText::draw() const {
-    drawTextCentered(TextFormat("%.0f", displayScore), pos.x, pos.y, 32, Color(255, 255, 255, colorAlpha));
+    drawTextCentered(TextFormat("%.0f", displayScore), pos.x, pos.y - 50, 32, Color(255, 255, 255, colorAlpha));
 }
 
 void ScoreText::physicsUpdate() {

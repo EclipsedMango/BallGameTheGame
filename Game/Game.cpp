@@ -238,7 +238,7 @@ void runGame() {
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
 
-                if (!hasDied && shape->type != 4 && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
+                if (!hasDied && !shape->destoryShape && shape->type != 4 && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
                     switch (shape->type) {
                         case 0:
                             displayScore = 100.0f * scoreMultiplier;
@@ -251,8 +251,8 @@ void runGame() {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 0);
                             }
 
-                            shapes.erase(shapes.begin() + i);
-                            delete shape;
+                            shape->destoryShape = true;
+                            tryDeleteShape(shapes, shape, i);
                             break;
                         case 1:
                             for (int i = 0; i < 15; ++i) {
@@ -270,8 +270,8 @@ void runGame() {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 1);
                             }
 
-                            shapes.erase(shapes.begin() + i);
-                            delete shape;
+                            shape->destoryShape = true;
+                            tryDeleteShape(shapes, shape, i);
                             break;
                         default: break;
                     }
@@ -311,12 +311,12 @@ void runGame() {
             Vector2 vel = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
             Vector2 pos = playerPos;
 
-            constexpr int lineCount = 150;
+            constexpr int lineCount = 100;
 
             for (int i = 0; i < lineCount; ++i) {
                 vel.y += gravity * physicsDelta;
                 const Vector2 newPos = Vector2Add(pos, Vector2MultiplyS(vel, physicsDelta));
-                DrawLineEx(pos, newPos, 5, Color(240, 240, 240, (1.0f - static_cast<float>(i) / static_cast<float>(lineCount)) * 255.0f));
+                DrawLineEx(pos, newPos, 12, Color(240, 240, 240, (1.0f - static_cast<float>(i) / static_cast<float>(lineCount)) * 255.0f));
                 pos = newPos;
             }
         }
@@ -377,6 +377,19 @@ bool trySpawnShape(std::vector<Shape*>* shapes, const int type) {
 
     if (!checkOverlapShape(*shapes, shape)) {
         shapes->push_back(shape);
+        return true;
+    }
+
+    return false;
+}
+
+// If tryDeleteShape succeeds then return true otherwise false.
+bool tryDeleteShape(std::vector<Shape*> shapes, const Shape* shape, const int index) {
+    shape = shapes[index];
+
+    if (shape->isDead) {
+        shapes.erase(shapes.begin() + index);
+        delete shape;
         return true;
     }
 
