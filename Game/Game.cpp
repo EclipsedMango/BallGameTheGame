@@ -31,8 +31,6 @@ void runGame() {
     constexpr float particleDelta = 0.01f;
 
     float deathTimer = 0.75f;
-    float scoreTimer = 0.0f;
-    float inputTimeLeft = 1.0f;
 
     // Player Attributes
     constexpr auto playerStartingPos = Vector2(0, 540);
@@ -51,8 +49,6 @@ void runGame() {
     displayScore = 0;
     scoreMultiplier = 1.0;
     score = 0;
-
-    float timeMultiplier = 1.0f;
 
     // Shapes
     auto shapes = std::vector<Shape*>();
@@ -79,6 +75,7 @@ void runGame() {
         }
     }
 
+    // This is needed to prevent the player immediately clicking when entering the game.
     BeginDrawing();
     EndDrawing();
 
@@ -94,9 +91,10 @@ void runGame() {
         physicsTimer += delta * timeMultiplier;
         shapeSpawnTimer += delta * timeMultiplier;
         particleTimer += delta * timeMultiplier;
-        scoreTimer -= delta * timeMultiplier;
+        scoreTimer = std::max(scoreTimer - delta * timeMultiplier, 0.0f);
         inputTimeLeft = std::max(inputTimeLeft - delta / timeMultiplier / 24.0f, 0.0f);
 
+        // Update window size as well as adjust camera to new size.
         if (IsWindowResized()) {
             windowHeight = GetScreenHeight();
             windowWidth = GetScreenWidth();
@@ -109,9 +107,10 @@ void runGame() {
             isPaused = !isPaused;
         }
 
+        // Slows time when mouse button left is held otherwise continue as normal.
         if (inputTimeLeft > 0.0f) {
             if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-                timeMultiplier = 0.3f;
+                timeMultiplier = timeMultiplierUpgrade;
             } else {
                 timeMultiplier = 1.0f;
             }
@@ -140,6 +139,7 @@ void runGame() {
             for (int i = 0; i < particles.size(); ++i) {
                 Particle* particle = particles[i];
 
+                // Check if particle is alive before deleting.
                 if (!particles.empty() && particle->lifespan <= 0) {
                     particles.erase(particles.begin());
                 }
@@ -170,6 +170,7 @@ void runGame() {
         while (shapeSpawnTimer > shapesDelta && shapes.size() < 1500) {
             shapeSpawnTimer -= shapesDelta;
 
+            // Spawn shape in varying chances.
             if (GetRandomValue(0, 8) == 0) {
                 trySpawnShape(&shapes, 0);
             }
@@ -191,7 +192,7 @@ void runGame() {
                 scoreSize -= physicsDelta * 5;
             }
 
-            // Update
+            // Update players position every physics frame.
             if (!hasDied) {
                 velocity.y += gravity * physicsDelta;
                 playerPos = Vector2Add(playerPos, Vector2MultiplyS(velocity, physicsDelta));
@@ -208,7 +209,7 @@ void runGame() {
             std::erase_if(shapes,
                 [](const Shape* o) { return o->killYourSelf; });
 
-            // Main Player Movement
+            // Set velocity based on the distance the cursor is to the player and multiply on playSpeed.
             if (isMouseClicked) {
                 velocity = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
             }
@@ -243,7 +244,7 @@ void runGame() {
                         case 0:
                             createDisplayScore(shapes, shape, 0, i);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
-                            trySpawnShape(&shapes, 0);
+                            //trySpawnShape(&shapes, 0);
 
                             for (int i = 0; i < 12; ++i) {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 0);
@@ -272,11 +273,12 @@ void runGame() {
                         default: break;
                     }
 
+                    // Rewards for destroying a safe shape.
                     if (!hasDied) {
                         velocity.y = -1000.0;
                         velocity.x = velocity.x * 0.5f;
 
-                        scoreTimer = 1.5f;
+                        scoreTimer = scoreTimerUpgrade;
                         inputTimeLeft = std::min(inputTimeLeft + 0.5f, 1.0f);
 
                         if (scoreMultiplier < scoreMultiplierMax) {
@@ -286,6 +288,8 @@ void runGame() {
                     break;
                 }
             }
+
+            // Camera movement based on playerPos and playerSpeed while keeping it clamp within game map.
             camera.target = Vector2Lerp(camera.target,
                 Vector2(
                     std::clamp(playerPos.x, -3030.0f + (windowWidth / camera.zoom) / 2.0f, 3030.0f - (windowWidth / camera.zoom) / 2.0f),
@@ -347,14 +351,18 @@ void runGame() {
         drawTextCentered(TextFormat("%d", score), windowWidth / 2.0f, 24, scoreSize, RAYWHITE);
         drawProgressBar(windowWidth / 2.0f, 128, 30, 600, WHITE, GRAY, inputTimeLeft);
 
+        // Various counters for testing.
         drawTextCentered(TextFormat("%d", shapes.size()), 24, 32, 20, LIME);
         drawTextCentered(TextFormat("%d", particles.size()), 24, 60, 20, LIME);
         drawTextCentered(TextFormat("%.2f", deathTimer), 24, 88, 20, LIME);
+        drawTextCentered(TextFormat("%.2f", scoreTimer), 24, 116, 20, LIME);
         DrawFPS(6, 6);
+
         EndDrawing();
     }
 }
 
+// Tries to spawn shape if the new shapes pos isn't overlapping with existing shape pos.
 bool trySpawnShape(std::vector<Shape*>* shapes, const int type) {
     Shape* shape;
 
