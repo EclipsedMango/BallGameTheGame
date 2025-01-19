@@ -21,11 +21,14 @@ inline bool isPaused = false;
 inline bool hasDied = false;
 inline bool destoryParticle = false;
 
+inline float displayScore = 0;
+inline float scoreMultiplier = 1.0f;
 inline int score = 0;
 inline int scoreSize = 64;
 inline float scoreMultiplierMax = 8.0f;
+inline int scoreMultiplierCost = 5500;
 
-inline int money = 0;
+inline int money = 1000000;
 
 inline auto playerColor = Color(52, 156, 243, 255);
 inline auto playerColorOutline = Color(31, 104, 150, 255);

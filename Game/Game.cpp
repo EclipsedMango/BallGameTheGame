@@ -48,8 +48,8 @@ void runGame() {
     hasDied = false;
 
     // Player Related Info
-    float displayScore = 0;
-    float scoreMultiplier = 1.0f;
+    displayScore = 0;
+    scoreMultiplier = 1.0;
     score = 0;
 
     float timeMultiplier = 1.0f;
@@ -241,13 +241,11 @@ void runGame() {
                 if (!hasDied && !shape->destoryShape && shape->type != 4 && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
                     switch (shape->type) {
                         case 0:
-                            displayScore = 100.0f * scoreMultiplier;
-                            score += displayScore;
-                            scoreSize += 25;
-                            trySpawnShape(&shapes, 0);
+                            createDisplayScore(shapes, shape, 0, i);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
+                            trySpawnShape(&shapes, 0);
 
-                            for (int i = 0; i < 10; ++i) {
+                            for (int i = 0; i < 12; ++i) {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 0);
                             }
 
@@ -255,18 +253,16 @@ void runGame() {
                             tryDeleteShape(shapes, shape, i);
                             break;
                         case 1:
-                            for (int i = 0; i < 15; ++i) {
+                            for (int i = 0; i < 16; ++i) {
                                 spawnPlayerParticles(&particles, playerPos, velocity, 1);
                             }
                             hasDied = true;
                             break;
                         case 2:
-                            displayScore = 500.0f * scoreMultiplier;
-                            score += displayScore;
-                            scoreSize += 35;
+                            createDisplayScore(shapes, shape, 1, i);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
 
-                            for (int i = 0; i < 10; ++i) {
+                            for (int i = 0; i < 8; ++i) {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 1);
                             }
 
@@ -415,8 +411,27 @@ void spawnPlayerParticles(std::vector<Particle*>* particles, const Vector2 playe
             break;
         case 1:
             particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-30, 30)),
-                GetRandomValue(playerPos.y, playerPos.y - 45)), 10, playerVel));
+                GetRandomValue(playerPos.y, playerPos.y - 45)), 16, playerVel));
             break;
         default: printf("This PlayerParticle doesn't exist\n");
+    }
+}
+
+void createDisplayScore (std::vector<Shape*> shapes, const Shape* shape, const int type, const int index) {
+    shape = shapes[index];
+
+    switch (type) {
+        case 0:
+            displayScore = 100.0f * scoreMultiplier;
+            score += displayScore;
+            scoreSize += 25;
+            break;
+        case 1:
+            displayScore = 500.0f * scoreMultiplier;
+            score += displayScore;
+            scoreSize += 35;
+            shapes.push_back(new ScoreText(shape->pos, displayScore));
+            break;
+        default: break;
     }
 }

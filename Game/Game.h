@@ -14,5 +14,6 @@ bool trySpawnShape(std::vector<Shape*>* shapes, int type);
 bool tryDeleteShape(std::vector<Shape*> shapes, const Shape* shape, int index);
 void spawnShapeParticles(std::vector<Particle*>* particles, Vector2 shapePos, Vector2 playerVel, int type);
 void spawnPlayerParticles(std::vector<Particle*>* particles, Vector2 playerPos, Vector2 playerVel, int type);
+void createDisplayScore (std::vector<Shape*> shapes, const Shape* shape, int type, int index);
 
 #endif //GAME_H
