@@ -198,8 +198,10 @@ void runGame() {
                 playerPos = Vector2Add(playerPos, Vector2MultiplyS(velocity, physicsDelta));
             }
 
-            for (Shape* shape: shapes) {
+            for (int i = 0; i < shapes.size(); ++i) {
+                Shape* shape = shapes[i];
                 shape->physicsUpdate();
+                tryDeleteShape(&shapes, shape, i);
             }
 
             for (Particle* particle: particles) {
@@ -244,14 +246,13 @@ void runGame() {
                         case 0:
                             createDisplayScore(shapes, shape, 0, i);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
-                            //trySpawnShape(&shapes, 0);
+                            trySpawnShape(&shapes, 0);
 
                             for (int i = 0; i < 12; ++i) {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 0);
                             }
 
                             shape->destoryShape = true;
-                            tryDeleteShape(shapes, shape, i);
                             break;
                         case 1:
                             for (int i = 0; i < 16; ++i) {
@@ -268,7 +269,6 @@ void runGame() {
                             }
 
                             shape->destoryShape = true;
-                            tryDeleteShape(shapes, shape, i);
                             break;
                         default: break;
                     }
@@ -388,11 +388,9 @@ bool trySpawnShape(std::vector<Shape*>* shapes, const int type) {
 }
 
 // If tryDeleteShape succeeds then return true otherwise false.
-bool tryDeleteShape(std::vector<Shape*> shapes, const Shape* shape, const int index) {
-    shape = shapes[index];
-
+bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, const int index) {
     if (shape->isDead) {
-        shapes.erase(shapes.begin() + index);
+        shapes->erase(shapes->begin() + index);
         delete shape;
         return true;
     }
