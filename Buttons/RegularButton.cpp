@@ -4,7 +4,6 @@
 
 #include "RegularButton.h"
 
-#include "raymath.h"
 #include "../Util.h"
 
 RegularButton::RegularButton(const Vector2 buttonPos, const Vector2 buttonSize, const int fontSize, const Color color, const Color fontColor, const std::string& buttonLabel) {
@@ -43,7 +42,7 @@ bool RegularButton::checkButtonRegion() {
 
 void RegularButton::draw() const {
     Vector2 centeredPos = getScreenPos();
-    DrawRectangle(centeredPos.x - size.x / 2.0 * scale, centeredPos.y - size.y / 2.0 * scale, size.x, size.y, color);
+    DrawRectangle(centeredPos.x - size.x / 2.0 - scale, centeredPos.y - size.y / 2.0 - scale, size.x * scale, size.y * scale, color);
     drawTextCentered(label.c_str(), centeredPos.x, centeredPos.y - size.y / 2.0 + 2.0, fontSize * scale, fontColor);
 }
 

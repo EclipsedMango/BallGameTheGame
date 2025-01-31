@@ -128,7 +128,7 @@ void runGame() {
             timeMultiplier = 1.0f;
         }
 
-        if (scoreTimer < 0.0f) {
+        if (scoreTimer == 0.0f) {
             scoreMultiplier = 1.0f;
         }
 
@@ -158,9 +158,8 @@ void runGame() {
                 camera.target = Vector2(camera.target.x + GetRandomValue(-2, 2), camera.target.y + GetRandomValue(-2, 2));
             }
 
-            money = score;
-
             if (deathTimer <= 0.0f) {
+                money += score;
                 inMenu = true;
                 return;
             }
@@ -171,7 +170,7 @@ void runGame() {
             shapeSpawnTimer -= shapesDelta;
 
             // Spawn shape in varying chances.
-            if (GetRandomValue(0, 8) == 0) {
+            if (GetRandomValue(0, 12) == 0) {
                 trySpawnShape(&shapes, 0);
             }
 

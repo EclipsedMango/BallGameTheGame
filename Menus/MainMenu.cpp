@@ -7,7 +7,6 @@
 #include "raylib.h"
 #include "../Util.h"
 #include "../Buttons/Button.h"
-#include "../Buttons/RegularButton.h"
 #include "../Buttons/TextureButton.h"
 
 void mainMenu() {
@@ -72,9 +71,9 @@ void mainMenu() {
         }
 
         if (hasDied) {
-            drawTextCentered("You Died!", windowWidth / 2.0, windowHeight / 2.0 - 280, 72, Color(236, 55, 82, 255));
-            drawTextCentered("Your Final Score is:", windowWidth / 2.0, windowHeight / 2.0 - 150, 40, GOLD);
-            drawTextCentered(TextFormat("%d", score), windowWidth / 2.0, windowHeight / 2.0 - 100, 40, GOLD);
+            drawTextCentered("You Died!", windowWidth / 2.0 - 500, windowHeight / 2.0 - 280, 72, Color(236, 55, 82, 255));
+            drawTextCentered("Your Final Score is:", windowWidth / 2.0 - 500, windowHeight / 2.0 - 150, 40, GOLD);
+            drawTextCentered(TextFormat("%d", score), windowWidth / 2.0 - 500, windowHeight / 2.0 - 100, 40, GOLD);
         }
 
         BeginDrawing();

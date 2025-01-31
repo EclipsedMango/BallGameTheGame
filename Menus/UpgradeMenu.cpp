@@ -18,6 +18,8 @@ void upgradeMenu() {
     const Texture2D backHoverTexture = LoadTexture("BackHighlight.png");
     const Texture2D backPressTexture = LoadTexture("BackPress.png");
 
+    const Font textFont = LoadFontEx("Fonts/JetBrainsMono-VariableFont_wght.ttf", 128, nullptr, 0);
+
     auto *backButton = new TextureButton(Vector2(-890, -450), Vector2(73, 74), backTexture, backHoverTexture, backPressTexture);
 
     auto *colorButton1 = new RegularButton(Vector2(-150, 400),
@@ -76,8 +78,8 @@ void upgradeMenu() {
 
         if (scoreMultiplierButton->checkButtonRegion() && money >= scoreMultiplierCost) {
             scoreMultiplierMax += 1;
-            money -= 5500;
-            scoreMultiplierCost *= 1.6;
+            money -= scoreMultiplierCost;
+            scoreMultiplierCost *= 2.0;
             scoreMultiplierCost = scoreMultiplierCost / 5 * 5;
         }
 
@@ -92,6 +94,8 @@ void upgradeMenu() {
         colorButton3->draw();
 
         scoreMultiplierButton->draw();
+
+        DrawTextEx(textFont, "Hallo, this a test to see changed fonts", Vector2(windowWidth / 2.0 - 500, windowHeight / 2.0 - 250), 64, 0, WHITE);
 
         drawTextCentered("Money:", windowWidth / 2.0, windowHeight / 2.0 - 500, 65, WHITE);
         drawTextCentered(TextFormat("%d", money), windowWidth / 2.0, windowHeight / 2.0 - 400, 55, WHITE);

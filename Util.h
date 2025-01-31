@@ -26,7 +26,7 @@ inline float scoreMultiplier = 1.0f;
 inline int score = 0;
 inline int scoreSize = 64;
 inline float scoreMultiplierMax = 8.0f;
-inline int scoreMultiplierCost = 5500;
+inline int scoreMultiplierCost = 15000;
 
 inline int money = 1000000;
 
@@ -34,7 +34,7 @@ inline float timeMultiplier = 1.0f;
 inline float timeMultiplierUpgrade = 0.3f;
 
 inline float scoreTimer = 0.0f;
-inline float scoreTimerUpgrade = 1.0f;
+inline float scoreTimerUpgrade = 0.75f;
 inline float inputTimeLeft = 1.0f;
 
 inline auto playerColor = Color(52, 156, 243, 255);
