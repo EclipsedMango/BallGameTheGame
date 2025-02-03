@@ -11,15 +11,15 @@
 #include "../Buttons/TextureButton.h"
 
 void upgradeMenu() {
-    const Texture2D plusTexture = LoadTexture("Plus.png");
-    const Texture2D plusHoverTexture = LoadTexture("PlusHighlight.png");
-    const Texture2D plusPressTexture = LoadTexture("PlusPress.png");
+    const Texture2D plusTexture = LoadTexture("resources/Plus.png");
+    const Texture2D plusHoverTexture = LoadTexture("resources/PlusHighlight.png");
+    const Texture2D plusPressTexture = LoadTexture("resources/PlusPress.png");
 
-    const Texture2D backTexture = LoadTexture("Back.png");
-    const Texture2D backHoverTexture = LoadTexture("BackHighlight.png");
-    const Texture2D backPressTexture = LoadTexture("BackPress.png");
+    const Texture2D backTexture = LoadTexture("resources/Back.png");
+    const Texture2D backHoverTexture = LoadTexture("resources/BackHighlight.png");
+    const Texture2D backPressTexture = LoadTexture("resources/BackPress.png");
 
-    const Font textFont = LoadFontEx("Fonts/JetBrainsMono-VariableFont_wght.ttf", 128, nullptr, 0);
+    const Font textFont = LoadFontEx("resources/Fonts/JetBrainsMono-VariableFont_wght.ttf", 128, nullptr, 0);
 
     auto *plusButton = new TextureButton(Vector2(500, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture);
     auto *backButton = new TextureButton(Vector2(-890, -450), Vector2(73, 74), backTexture, backHoverTexture, backPressTexture);

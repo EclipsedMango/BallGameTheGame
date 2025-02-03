@@ -11,23 +11,23 @@
 
 void mainMenu() {
     // Initialize Textures from resources file.
-    const Texture2D titleTexture = LoadTexture("Title.png");
+    const Texture2D titleTexture = LoadTexture("resources/Title.png");
 
-    const Texture2D playTexture = LoadTexture("Play.png");
-    const Texture2D playHoverTexture = LoadTexture("PlayHighlight.png");
-    const Texture2D playPressTexture = LoadTexture("PlayPress.png");
+    const Texture2D playTexture = LoadTexture("resources/Play.png");
+    const Texture2D playHoverTexture = LoadTexture("resources/PlayHighlight.png");
+    const Texture2D playPressTexture = LoadTexture("resources/PlayPress.png");
 
-    const Texture2D upgradesTexture = LoadTexture("Upgrades.png");
-    const Texture2D upgradesHoverTexture = LoadTexture("UpgradesHighlight.png");
-    const Texture2D upgradesPressTexture = LoadTexture("UpgradesPress.png");
+    const Texture2D upgradesTexture = LoadTexture("resources/Upgrades.png");
+    const Texture2D upgradesHoverTexture = LoadTexture("resources/UpgradesHighlight.png");
+    const Texture2D upgradesPressTexture = LoadTexture("resources/UpgradesPress.png");
 
-    const Texture2D optionsTexture = LoadTexture("Options.png");
-    const Texture2D optionsHoverTexture = LoadTexture("OptionsHighlight.png");
-    const Texture2D optionsPressTexture = LoadTexture("OptionsPress.png");
+    const Texture2D optionsTexture = LoadTexture("resources/Options.png");
+    const Texture2D optionsHoverTexture = LoadTexture("resources/OptionsHighlight.png");
+    const Texture2D optionsPressTexture = LoadTexture("resources/OptionsPress.png");
 
-    const Texture2D exitTexture = LoadTexture("Exit.png");
-    const Texture2D exitHoverTexture = LoadTexture("ExitHighlight.png");
-    const Texture2D exitPressTexture = LoadTexture("ExitPress.png");
+    const Texture2D exitTexture = LoadTexture("resources/Exit.png");
+    const Texture2D exitHoverTexture = LoadTexture("resources/ExitHighlight.png");
+    const Texture2D exitPressTexture = LoadTexture("resources/ExitPress.png");
 
     std::printf("MainMenuTest\n");
 
