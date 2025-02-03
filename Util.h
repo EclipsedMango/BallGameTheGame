@@ -41,7 +41,9 @@ inline auto playerColor = Color(52, 156, 243, 255);
 inline auto playerColorOutline = Color(31, 104, 150, 255);
 
 void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color color);
+void drawTextCenteredFont(const Font &font, const char* text, float posX, float posY, int fontSize, float fontSpacing, Color color);
 Vector2 Vector2MultiplyS(Vector2 a, float b);
+Vector2 Vector2DivideS(Vector2 a, float b);
 void drawProgressBar(int posX, int posY, int height, int width, Color fillColor, Color emptyColor, float progress);
 float colorClamp(float colorValue);
 bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape);

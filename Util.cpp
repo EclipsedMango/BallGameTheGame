@@ -14,6 +14,11 @@ void drawTextCentered(const char* text, const int posX, const int posY, const in
     DrawText(text, posX - (textSize / 2), posY, fontSize, color);
 }
 
+void drawTextCenteredFont(const Font &font, const char* text, const float posX, const float posY, const int fontSize, const float fontSpacing, const Color color) {
+    const Vector2 textSize = MeasureTextEx(font, text, fontSize, fontSpacing);
+    DrawTextEx(font, text, Vector2(posX - textSize.x / 2.0, posY - textSize.y / 2.0), fontSize, fontSpacing, color);
+}
+
 void drawProgressBar(const int posX, const int posY, const int height, const int width, const Color fillColor, const Color emptyColor, const float progress) {
     const int barWidth = posX - width / 2.0;
     const int barHeight = posY - height / 2.0;
@@ -24,6 +29,10 @@ void drawProgressBar(const int posX, const int posY, const int height, const int
 
 Vector2 Vector2MultiplyS(const Vector2 a, float b) {
     return Vector2(a.x * b, a.y * b);
+}
+
+Vector2 Vector2DivideS(const Vector2 a, float b) {
+    return Vector2(a.x / b, a.y / 2);
 }
 
 float colorClamp(const float colorValue) {
