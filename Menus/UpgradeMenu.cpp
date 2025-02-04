@@ -21,7 +21,9 @@ void upgradeMenu() {
 
     const Font textFont = LoadFontEx("resources/Fonts/JetBrainsMono-VariableFont_wght.ttf", 128, nullptr, 0);
 
-    auto *plusButton = new TextureButton(Vector2(500, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture);
+    auto *scoreMultiplierButton = new TextureButton(Vector2(0, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture);
+    auto *timeMultiplierButton = new TextureButton(Vector2(-200, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture);
+    auto *inputTimeLeftButton = new TextureButton(Vector2(200, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture);
     auto *backButton = new TextureButton(Vector2(-890, -450), Vector2(73, 74), backTexture, backHoverTexture, backPressTexture);
 
     auto *colorButton1 = new RegularButton(Vector2(-150, 400),
@@ -33,7 +35,9 @@ void upgradeMenu() {
 
     while(!WindowShouldClose()) {
         if (!inUpgradeMenu) {
-            delete plusButton;
+            delete scoreMultiplierButton;
+            delete timeMultiplierButton;
+            delete inputTimeLeftButton;
             delete backButton;
 
             delete colorButton1;
@@ -74,18 +78,35 @@ void upgradeMenu() {
             playerColorOutline = Color(94, 50, 125, 255);
         }
 
-        if (plusButton->checkButtonRegion() && money >= scoreMultiplierCost) {
+        if (scoreMultiplierButton->checkButtonRegion() && money >= scoreMultiplierCost) {
             scoreMultiplierMax += 1;
             money -= scoreMultiplierCost;
             scoreMultiplierCost *= 2.0;
             scoreMultiplierCost = scoreMultiplierCost / 5 * 5;
         }
 
+        if (timeMultiplierButton->checkButtonRegion() && money >= timeMultiplierCost && timeMultiplierUpgrade > 0.3) {
+            timeMultiplierUpgrade -= 0.05;
+            money -= timeMultiplierCost;
+            timeMultiplierCost *= 2.0;
+            timeMultiplierCost = timeMultiplierCost / 5 * 5;
+        }
+
+        if (inputTimeLeftButton->checkButtonRegion() && money >= inputTimeLeftCost && inputTimeLeftUpgrade < 24.0) {
+            inputTimeLeftUpgrade += 1.0;
+            money -= inputTimeLeftCost;
+            inputTimeLeftCost *= 2.0;
+            inputTimeLeftCost = inputTimeLeftCost / 5 * 5;
+        }
+
         BeginDrawing();
         ClearBackground(Color(40, 44, 52, 255));
         DrawFPS(6, 6);
 
-        plusButton->draw();
+        scoreMultiplierButton->draw();
+        timeMultiplierButton->draw();
+        inputTimeLeftButton->draw();
+
         backButton->draw();
 
         colorButton1->draw();
@@ -95,9 +116,17 @@ void upgradeMenu() {
         drawTextCenteredFont(textFont, "Money", windowWidth / 2.0, windowHeight / 2.0 - 450, 84, 0, WHITE);
         drawTextCenteredFont(textFont, TextFormat("%d", money), windowWidth / 2.0, windowHeight / 2.0 - 375, 64, 0, WHITE);
 
-        drawTextCenteredFont(textFont, "Combo Size", windowWidth / 2.0 + 500, windowHeight / 2.0 + 25, 40, 0, WHITE);
-        drawTextCenteredFont(textFont, TextFormat("%.0f", scoreMultiplierMax), windowWidth / 2.0 + 500, windowHeight / 2.0 + 75, 34, 0, WHITE);
-        drawTextCenteredFont(textFont, TextFormat("%d", scoreMultiplierCost), windowWidth / 2.0 + 500 , windowHeight / 2.0 + 225, 34, 0, WHITE);
+        drawTextCenteredFont(textFont, "Combo Size", windowWidth / 2.0, windowHeight / 2.0 + 25, 40, 0, WHITE);
+        drawTextCenteredFont(textFont, TextFormat("%.0f", scoreMultiplierMax), windowWidth / 2.0, windowHeight / 2.0 + 75, 34, 0, WHITE);
+        drawTextCenteredFont(textFont, TextFormat("%d", scoreMultiplierCost), windowWidth / 2.0, windowHeight / 2.0 + 225, 34, 0, WHITE);
+
+        drawTextCenteredFont(textFont, "Time Slow", windowWidth / 2.0 - 200, windowHeight / 2.0 + 25, 40, 0, WHITE);
+        drawTextCenteredFont(textFont, TextFormat("%.2f", timeMultiplierUpgrade), windowWidth / 2.0 - 200, windowHeight / 2.0 + 75, 34, 0, WHITE);
+        drawTextCenteredFont(textFont, TextFormat("%d", timeMultiplierCost), windowWidth / 2.0 - 200, windowHeight / 2.0 + 225, 34, 0, WHITE);
+
+        drawTextCenteredFont(textFont, "Time Left", windowWidth / 2.0 + 200, windowHeight / 2.0 + 25, 40, 0, WHITE);
+        drawTextCenteredFont(textFont, TextFormat("%.1f", inputTimeLeftUpgrade), windowWidth / 2.0 + 200, windowHeight / 2.0 + 75, 34, 0, WHITE);
+        drawTextCenteredFont(textFont, TextFormat("%d", inputTimeLeftCost), windowWidth / 2.0 + 200, windowHeight / 2.0 + 225, 34, 0, WHITE);
 
         EndDrawing();
     }
