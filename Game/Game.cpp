@@ -64,14 +64,14 @@ void runGame() {
     camera.zoom = 1.25f * (windowHeight / 1080.0f);
 
     for (int i = 0; i < 75; i++) {
-        trySpawnShape(&shapes, 0);
+        trySpawnShape(&shapes, 0, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
 
         if (i < 15) {
-            trySpawnShape(&shapes, 1);
+            trySpawnShape(&shapes, 1, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
         }
 
         if (i < 2) {
-            trySpawnShape(&shapes, 2);
+            trySpawnShape(&shapes, 2, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
         }
     }
 
@@ -151,6 +151,10 @@ void runGame() {
             return;
         }
 
+        if (IsKeyDown(KEY_C)) {
+            timeMultiplier += 1.0;
+        }
+
         // Death Process
         if (hasDied) {
             deathTimer -= delta;
@@ -171,15 +175,15 @@ void runGame() {
 
             // Spawn shape in varying chances.
             if (GetRandomValue(0, 12) == 0) {
-                trySpawnShape(&shapes, 0);
+                trySpawnShape(&shapes, 0, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
             }
 
             if (GetRandomValue(0, 24) == 0) {
-                trySpawnShape(&shapes, 1);
+                trySpawnShape(&shapes, 1, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
             }
 
             if (GetRandomValue(0, 32) == 0) {
-                trySpawnShape(&shapes, 2);
+                trySpawnShape(&shapes, 2, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
             }
         }
 
@@ -210,7 +214,7 @@ void runGame() {
             std::erase_if(shapes,
                 [](const Shape* o) { return o->killYourSelf; });
 
-            // Set velocity based on the distance the cursor is to the player and multiply on playSpeed.
+            // Set velocity based on the distance the cursor is to the player and multiply by playerSpeed.
             if (isMouseClicked) {
                 velocity = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
             }
@@ -245,7 +249,7 @@ void runGame() {
                         case 0:
                             createDisplayScore(shapes, shape, 0, i);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
-                            trySpawnShape(&shapes, 0);
+                            trySpawnShape(&shapes, 0, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
 
                             for (int i = 0; i < 12; ++i) {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 0);
@@ -359,42 +363,6 @@ void runGame() {
 
         EndDrawing();
     }
-}
-
-// Tries to spawn shape if the new shapes pos isn't overlapping with existing shape pos.
-bool trySpawnShape(std::vector<Shape*>* shapes, const int type) {
-    Shape* shape;
-
-    switch (type) {
-        case 0:
-            shape = new CircleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
-            break;
-        case 1:
-            shape = new TriangleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
-            break;
-        case 2:
-            shape = new GoldCircleShape(Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
-            break;
-        default: return false;
-    }
-
-    if (!checkOverlapShape(*shapes, shape)) {
-        shapes->push_back(shape);
-        return true;
-    }
-
-    return false;
-}
-
-// If tryDeleteShape succeeds then return true otherwise false.
-bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, const int index) {
-    if (shape->isDead) {
-        shapes->erase(shapes->begin() + index);
-        delete shape;
-        return true;
-    }
-
-    return false;
 }
 
 void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapePos, const Vector2 playerVel, const int type) {

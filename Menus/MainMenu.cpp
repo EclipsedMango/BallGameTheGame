@@ -36,7 +36,15 @@ void mainMenu() {
     auto *optionsButton = new TextureButton(Vector2(0, 150), Vector2(320, 92), optionsTexture, optionsHoverTexture, optionsPressTexture);
     auto *exitButton = new TextureButton(Vector2(0, 300), Vector2(242, 92), exitTexture, exitHoverTexture, exitPressTexture);
 
+    // Shapes
+    auto shapes = std::vector<Shape*>();
+
+    float shapeSpawnTimer = 0.0f;
+
     while (!WindowShouldClose()) {
+        const float delta = GetFrameTime();
+        shapeSpawnTimer = std::max(shapeSpawnTimer - delta / 2.0, 0.0);
+
         if (!inMenu) {
             delete playButton;
             delete upgradeButton;
@@ -49,6 +57,18 @@ void mainMenu() {
         if (IsWindowResized()) {
             windowHeight = GetScreenHeight();
             windowWidth = GetScreenWidth();
+        }
+
+        if (shapeSpawnTimer == 0 && shapes.size() < 30) {
+            trySpawnShape(&shapes, 0, Vector2(GetRandomValue(50, windowWidth - 50), -50));
+
+            if (shapes.size() % 4 == 2) {
+                trySpawnShape(&shapes, 1, Vector2(GetRandomValue(50, windowWidth - 50), -50));
+            } else if (shapes.size() % 8 == 4) {
+                trySpawnShape(&shapes, 2, Vector2(GetRandomValue(50, windowWidth - 50), -50));
+            }
+
+            shapeSpawnTimer = 0.5;
         }
 
         if (playButton->checkButtonRegion()) {
@@ -70,6 +90,36 @@ void mainMenu() {
             return;
         }
 
+        for (int i = 0; i < shapes.size(); ++i) {
+            Shape* shape = shapes[i];
+            shape->physicsUpdate();
+            tryDeleteShape(&shapes, shape, i);
+        }
+
+        std::erase_if(shapes,
+            [](const Shape* o) { return o->killYourSelf; });
+
+        for (int i = 0; i < shapes.size(); ++i) {
+            Shape* shape = shapes[i];
+
+            shape->velocity.y += 0.9 * physicsDelta;
+
+            if (shape->velocity.x == 0) {
+                shape->velocity.x = GetRandomValue(-50, 50);
+            }
+
+            if (shape->pos.y > windowHeight - shape->radius) {
+                shape->pos.y = windowHeight - shape->radius;
+                shape->velocity.y = -shape->velocity.y * 0.75f;
+            } else if (shape->pos.x > windowWidth - shape->radius) {
+                shape->pos.x = windowWidth - shape->radius;
+                shape->velocity.x = -shape->velocity.x * 0.75f;
+            } else if (shape->pos.x < 0 + shape->radius) {
+                shape->pos.x = 0 + shape->radius;
+                shape->velocity.x = -shape->velocity.x * 0.75f;
+            }
+        }
+
         if (hasDied) {
             drawTextCentered("You Died!", windowWidth / 2.0 - 500, windowHeight / 2.0 - 280, 72, Color(236, 55, 82, 255));
             drawTextCentered("Your Final Score is:", windowWidth / 2.0 - 500, windowHeight / 2.0 - 150, 40, GOLD);
@@ -79,6 +129,11 @@ void mainMenu() {
         BeginDrawing();
         ClearBackground(Color(40, 44, 52, 255));
         DrawFPS(6, 6);
+
+        // Draw Shapes
+        for (Shape* shape : shapes) {
+            shape->draw();
+        }
 
         DrawTextureEx(titleTexture, Vector2(windowWidth / 2.0 - 547, windowHeight / 2.0 - 471), 0, 1.0, WHITE);
 

@@ -19,5 +19,7 @@ void TriangleShape::draw() const {
 }
 
 void TriangleShape::physicsUpdate() {
+    pos = Vector2Add(pos, Vector2MultiplyS(velocity, physicsDelta));
+
     rotation += physicsDelta * 180.0f;
 }

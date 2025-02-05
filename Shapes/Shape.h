@@ -5,12 +5,14 @@
 #ifndef SHAPES_H
 #define SHAPES_H
 #include "raylib.h"
+#include "raymath.h"
 
 class Shape {
 public:
     virtual ~Shape();
 
     Vector2 pos = {};
+    Vector2 velocity = {};
     float radius = 0;
     int type = 0;
     int lifeSpan = 255;

@@ -17,6 +17,8 @@ void GoldCircleShape::draw() const {
 }
 
 void GoldCircleShape::physicsUpdate() {
+    pos = Vector2Add(pos, Vector2MultiplyS(velocity, physicsDelta));
+
     if (destoryShape) {
         if (radius > 0) {
             radius -= physicsDelta * 128.0;

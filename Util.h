@@ -8,6 +8,9 @@
 
 #include "raylib.h"
 #include "Shapes/Shape.h"
+#include "Shapes/CircleShape.h"
+#include "Shapes/GoldCircleShape.h"
+#include "Shapes/TriangleShape.h"
 
 inline int windowWidth = 1920;
 inline int windowHeight = 1080;
@@ -51,5 +54,7 @@ Vector2 Vector2DivideS(Vector2 a, float b);
 void drawProgressBar(int posX, int posY, int height, int width, Color fillColor, Color emptyColor, float progress);
 float colorClamp(float colorValue);
 bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape);
+bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos);
+bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, const int index);
 
 #endif //UTIL_H

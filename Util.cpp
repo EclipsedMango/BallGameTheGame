@@ -55,3 +55,39 @@ bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape) {
     return false;
 }
 
+// Tries to spawn shape if the new shapes pos isn't overlapping with existing shape pos.
+bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos) {
+    Shape* shape;
+
+    switch (type) {
+    case 0:
+        shape = new CircleShape(pos);
+        break;
+    case 1:
+        shape = new TriangleShape(pos);
+        break;
+    case 2:
+        shape = new GoldCircleShape(pos);
+        break;
+    default: return false;
+    }
+
+    if (!checkOverlapShape(*shapes, shape)) {
+        shapes->push_back(shape);
+        return true;
+    }
+
+    return false;
+}
+
+// If tryDeleteShape succeeds then return true otherwise false.
+bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, const int index) {
+    if (shape->isDead) {
+        shapes->erase(shapes->begin() + index);
+        delete shape;
+        return true;
+    }
+
+    return false;
+}
+
