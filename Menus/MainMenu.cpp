@@ -40,10 +40,12 @@ void mainMenu() {
     auto shapes = std::vector<Shape*>();
 
     float shapeSpawnTimer = 0.0f;
+    float shapeJumpTimer = 0.0f;
 
     while (!WindowShouldClose()) {
         const float delta = GetFrameTime();
         shapeSpawnTimer = std::max(shapeSpawnTimer - delta / 2.0, 0.0);
+        shapeJumpTimer = std::max(shapeJumpTimer - delta / 2.0, 0.0);
 
         if (!inMenu) {
             delete playButton;
@@ -69,6 +71,17 @@ void mainMenu() {
             }
 
             shapeSpawnTimer = 0.5;
+        }
+
+        if (shapeJumpTimer == 0) {
+            for (int i = 0; i < shapes.size(); i++) {
+                Shape* shape = shapes[i];
+                if (shape->pos.y > windowHeight / 2.0 + 250) {
+                    shape->velocity.y -= GetRandomValue(25.0, 45.0);
+                }
+                shape->velocity.x += GetRandomValue(-10, 10);
+            }
+            shapeJumpTimer = 3.0;
         }
 
         if (playButton->checkButtonRegion()) {
@@ -110,13 +123,13 @@ void mainMenu() {
 
             if (shape->pos.y > windowHeight - shape->radius) {
                 shape->pos.y = windowHeight - shape->radius;
-                shape->velocity.y = -shape->velocity.y * 0.75f;
+                shape->velocity.y = -shape->velocity.y * 0.8f;
             } else if (shape->pos.x > windowWidth - shape->radius) {
                 shape->pos.x = windowWidth - shape->radius;
-                shape->velocity.x = -shape->velocity.x * 0.75f;
+                shape->velocity.x = -shape->velocity.x * 0.8f;
             } else if (shape->pos.x < 0 + shape->radius) {
                 shape->pos.x = 0 + shape->radius;
-                shape->velocity.x = -shape->velocity.x * 0.75f;
+                shape->velocity.x = -shape->velocity.x * 0.8f;
             }
         }
 
