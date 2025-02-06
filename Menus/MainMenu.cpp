@@ -42,8 +42,11 @@ void mainMenu() {
     float shapeSpawnTimer = 0.0f;
     float shapeJumpTimer = 0.0f;
 
+    float physicsTimer = 0.0f;
+
     while (!WindowShouldClose()) {
         const float delta = GetFrameTime();
+        physicsTimer += delta * 24.0;
         shapeSpawnTimer = std::max(shapeSpawnTimer - delta / 2.0, 0.0);
         shapeJumpTimer = std::max(shapeJumpTimer - delta / 2.0, 0.0);
 
@@ -77,12 +80,67 @@ void mainMenu() {
             for (int i = 0; i < shapes.size(); i++) {
                 Shape* shape = shapes[i];
                 if (shape->pos.y > windowHeight / 2.0 + 250) {
-                    shape->velocity.y -= GetRandomValue(25.0, 45.0);
+                    shape->velocity.y -= GetRandomValue(30.0, 60.0);
+                    shape->velocity.x += GetRandomValue(-60, 60);
                 }
-                shape->velocity.x += GetRandomValue(-10, 10);
             }
             shapeJumpTimer = 3.0;
         }
+
+        while (physicsTimer > physicsDelta) {
+            physicsTimer -= physicsDelta;
+
+            for (int i = 0; i < shapes.size(); ++i) {
+                Shape* shape = shapes[i];
+                shape->physicsUpdate();
+                tryDeleteShape(&shapes, shape, i);
+            }
+
+            for (int i = 0; i < shapes.size(); ++i) {
+                Shape* shape = shapes[i];
+
+                shape->velocity.y += 0.9 * physicsDelta;
+
+                for (int j = i + 1; j < shapes.size(); j++) {
+                    Shape* shape2 = shapes[j];
+                    if (shape != shape2) {
+
+                        float disX = shape2->pos.x - shape->pos.x;
+                        float disY = shape2->pos.y - shape->pos.y;
+
+                        float distance = sqrtf(disX * disX + disY * disY);
+
+                        if (distance <= (shape->radius + shape2->radius)) {
+                            shape->pos = Vector2Subtract(shape->pos, Vector2(disX / 16.0, disY / 16.0));
+                            shape2->pos = Vector2Subtract(shape2->pos, Vector2(-disX / 16.0, -disY / 16.0));
+
+                            shape->velocity = Vector2MultiplyS(Vector2(-shape->velocity.x, -shape->velocity.y), 0.75);
+                            shape2->velocity = Vector2MultiplyS(Vector2(-shape2->velocity.x, -shape2->velocity.y), 0.75);
+                        }
+                    }
+                }
+
+                if (shape->velocity.x == 0) {
+                    shape->velocity.x = GetRandomValue(-50, 50);
+                }
+
+                if (shape->pos.y > windowHeight - shape->radius) {
+                    shape->pos.y = windowHeight - shape->radius;
+                    shape->velocity.y = -shape->velocity.y * 0.8f;
+                }
+                else if (shape->pos.x > windowWidth - shape->radius) {
+                    shape->pos.x = windowWidth - shape->radius;
+                    shape->velocity.x = -shape->velocity.x * 0.8f;
+                }
+                else if (shape->pos.x < 0 + shape->radius) {
+                    shape->pos.x = 0 + shape->radius;
+                    shape->velocity.x = -shape->velocity.x * 0.8f;
+                }
+            }
+        }
+
+        std::erase_if(shapes,
+            [](const Shape* o) { return o->killYourSelf; });
 
         if (playButton->checkButtonRegion()) {
             inMenu = false;
@@ -101,36 +159,6 @@ void mainMenu() {
         if (exitButton->checkButtonRegion()) {
             shouldGameClose = true;
             return;
-        }
-
-        for (int i = 0; i < shapes.size(); ++i) {
-            Shape* shape = shapes[i];
-            shape->physicsUpdate();
-            tryDeleteShape(&shapes, shape, i);
-        }
-
-        std::erase_if(shapes,
-            [](const Shape* o) { return o->killYourSelf; });
-
-        for (int i = 0; i < shapes.size(); ++i) {
-            Shape* shape = shapes[i];
-
-            shape->velocity.y += 0.9 * physicsDelta;
-
-            if (shape->velocity.x == 0) {
-                shape->velocity.x = GetRandomValue(-50, 50);
-            }
-
-            if (shape->pos.y > windowHeight - shape->radius) {
-                shape->pos.y = windowHeight - shape->radius;
-                shape->velocity.y = -shape->velocity.y * 0.8f;
-            } else if (shape->pos.x > windowWidth - shape->radius) {
-                shape->pos.x = windowWidth - shape->radius;
-                shape->velocity.x = -shape->velocity.x * 0.8f;
-            } else if (shape->pos.x < 0 + shape->radius) {
-                shape->pos.x = 0 + shape->radius;
-                shape->velocity.x = -shape->velocity.x * 0.8f;
-            }
         }
 
         if (hasDied) {

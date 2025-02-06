@@ -13,6 +13,7 @@ public:
 
     Vector2 pos = {};
     Vector2 velocity = {};
+    float rotation = 0;
     float radius = 0;
     int type = 0;
     int lifeSpan = 255;

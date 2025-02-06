@@ -13,8 +13,6 @@ public:
     void draw() const override;
     void physicsUpdate() override;
     TriangleShape() = default;
-
-    float rotation = 0;
 };
 
 
