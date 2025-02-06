@@ -14,8 +14,8 @@ TriangleShape::TriangleShape(const Vector2 randomPos) {
 }
 
 void TriangleShape::draw() const {
-    DrawPoly(pos, 3, radius, rotation, Color(41, 146, 74, 255));
-    DrawPoly(pos, 3, radius - 8, rotation, Color(66, 183, 106, 255));
+    DrawPoly(pos, 5, radius, rotation, Color(41, 146, 74, 255));
+    DrawPoly(pos, 5, radius - 8, rotation, Color(66, 183, 106, 255));
 }
 
 void TriangleShape::physicsUpdate() {

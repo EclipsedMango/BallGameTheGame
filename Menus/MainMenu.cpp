@@ -46,7 +46,7 @@ void mainMenu() {
 
     while (!WindowShouldClose()) {
         const float delta = GetFrameTime();
-        physicsTimer += delta * 24.0;
+        physicsTimer += delta;
         shapeSpawnTimer = std::max(shapeSpawnTimer - delta / 2.0, 0.0);
         shapeJumpTimer = std::max(shapeJumpTimer - delta / 2.0, 0.0);
 
@@ -80,11 +80,11 @@ void mainMenu() {
             for (int i = 0; i < shapes.size(); i++) {
                 Shape* shape = shapes[i];
                 if (shape->pos.y > windowHeight / 2.0 + 250) {
-                    shape->velocity.y -= GetRandomValue(30.0, 60.0);
-                    shape->velocity.x += GetRandomValue(-60, 60);
+                    shape->velocity.y -= GetRandomValue(2000, 3000);
+                    shape->velocity.x += GetRandomValue(-1000, 1000);
                 }
             }
-            shapeJumpTimer = 3.0;
+            shapeJumpTimer = 1.0;
         }
 
         while (physicsTimer > physicsDelta) {
@@ -93,13 +93,12 @@ void mainMenu() {
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
                 shape->physicsUpdate();
-                tryDeleteShape(&shapes, shape, i);
             }
 
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
 
-                shape->velocity.y += 0.9 * physicsDelta;
+                shape->velocity.y += 2048.0 * physicsDelta;
 
                 for (int j = i + 1; j < shapes.size(); j++) {
                     Shape* shape2 = shapes[j];
@@ -114,8 +113,8 @@ void mainMenu() {
                             shape->pos = Vector2Subtract(shape->pos, Vector2(disX / 16.0, disY / 16.0));
                             shape2->pos = Vector2Subtract(shape2->pos, Vector2(-disX / 16.0, -disY / 16.0));
 
-                            shape->velocity = Vector2MultiplyS(Vector2(-shape->velocity.x, -shape->velocity.y), 0.75);
-                            shape2->velocity = Vector2MultiplyS(Vector2(-shape2->velocity.x, -shape2->velocity.y), 0.75);
+                            shape->velocity = Vector2MultiplyS(Vector2Reflect(shape->velocity, Vector2Normalize(Vector2(disX, disY))), 0.75);
+                            shape2->velocity = Vector2MultiplyS(Vector2Reflect(shape2->velocity, Vector2Normalize(Vector2(disX, disY))), 0.75);
                         }
                     }
                 }
