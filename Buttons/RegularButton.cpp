@@ -23,7 +23,7 @@ bool RegularButton::checkButtonRegion() {
 
     if (GetMouseX() < centeredPos.x + size.x / 2.0 && GetMouseX() > centeredPos.x - size.x / 2.0 && GetMouseY() < centeredPos.y + size.y / 2.0 && GetMouseY() > centeredPos.y - size.y / 2.0) {
         color = colorHover;
-        scale = 1.05;
+        scale = 1.06;
 
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             color = colorPress;

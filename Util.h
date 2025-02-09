@@ -31,7 +31,7 @@ inline int scoreSize = 64;
 inline float scoreMultiplierMax = 8.0f;
 inline int scoreMultiplierCost = 15000;
 
-inline int money = 1000000;
+inline int money = 1000000000;
 
 inline float timeMultiplier = 1.0f;
 inline float timeMultiplierUpgrade = 0.6f;

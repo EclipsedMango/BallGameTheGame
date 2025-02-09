@@ -102,21 +102,20 @@ void mainMenu() {
 
                 for (int j = i + 1; j < shapes.size(); j++) {
                     Shape* shape2 = shapes[j];
-                    if (shape != shape2) {
+                    if (shape == shape2) continue;
 
-                        float disX = shape2->pos.x - shape->pos.x;
-                        float disY = shape2->pos.y - shape->pos.y;
+                    float disX = shape2->pos.x - shape->pos.x;
+                    float disY = shape2->pos.y - shape->pos.y;
 
-                        float distance = sqrtf(disX * disX + disY * disY);
+                    float distance = sqrtf(disX * disX + disY * disY);
 
-                        if (distance <= (shape->radius + shape2->radius)) {
-                            shape->pos = Vector2Subtract(shape->pos, Vector2(disX / 16.0, disY / 16.0));
-                            shape2->pos = Vector2Subtract(shape2->pos, Vector2(-disX / 16.0, -disY / 16.0));
+                    if (distance > shape->radius + shape2->radius) continue;
 
-                            shape->velocity = Vector2MultiplyS(Vector2Reflect(shape->velocity, Vector2Normalize(Vector2(disX, disY))), 0.75);
-                            shape2->velocity = Vector2MultiplyS(Vector2Reflect(shape2->velocity, Vector2Normalize(Vector2(disX, disY))), 0.75);
-                        }
-                    }
+                    shape->pos = Vector2Subtract(shape->pos, Vector2(disX / 16.0, disY / 16.0));
+                    shape2->pos = Vector2Subtract(shape2->pos, Vector2(-disX / 16.0, -disY / 16.0));
+
+                    shape->velocity = Vector2MultiplyS(Vector2Reflect(shape->velocity, Vector2Normalize(Vector2(disX, disY))), 0.75);
+                    shape2->velocity = Vector2MultiplyS(Vector2Reflect(shape2->velocity, Vector2Normalize(Vector2(disX, disY))), 0.75);
                 }
 
                 if (shape->velocity.x == 0) {
