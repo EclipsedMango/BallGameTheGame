@@ -18,6 +18,8 @@ constexpr float physicsDelta = 1.0f / 240.0f;
 
 inline bool shouldGameClose = false;
 
+inline Vector2 playerPos = Vector2(0, 0);
+
 inline bool inMenu = true;
 inline bool inUpgradeMenu = false;
 inline bool isPaused = false;
@@ -54,7 +56,8 @@ Vector2 Vector2DivideS(Vector2 a, float b);
 void drawProgressBar(int posX, int posY, int height, int width, Color fillColor, Color emptyColor, float progress);
 float colorClamp(float colorValue);
 bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape);
-bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos);
-bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, const int index);
+bool trySpawnShape(std::vector<Shape*>* shapes, int type, Vector2 pos, bool ignoreWindowBounds = false);
+void spawnShapeRandom(std::vector<Shape*>* shapes, int type, Vector2 minPos, Vector2 maxPos, bool ignoreWindowBounds = false);
+bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, int index);
 
 #endif //UTIL_H

@@ -11,7 +11,8 @@ class TextureButton final : public Button {
 public:
     TextureButton(Vector2 buttonPos, Vector2 buttonSize, const Texture2D &textureOriginal,
                   const Texture2D &textureHover,
-                  const Texture2D &texturePress);
+                  const Texture2D &texturePress,
+                  bool toggle);
 
     void draw() const override;
     bool checkButtonRegion() override;
@@ -20,6 +21,8 @@ public:
     Texture2D textureOriginal{};
     Texture2D textureHover{};
     Texture2D texturePress{};
+    bool toggle = false;
+    bool toggled = false;
 };
 
 

@@ -47,7 +47,6 @@ float colorClamp(const float colorValue) {
 
 bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape) {
     for (Shape* shapeOld: shapes) {
-
         if (Vector2Distance(shapeOld->pos, shape->pos) < shapeOld->radius + shape->radius) {
             return true;
         }
@@ -55,8 +54,14 @@ bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape) {
     return false;
 }
 
+bool isShapeInWindow(Shape shape, const Vector2 windowPos) {
+    Vector2 shapeWindowPos = Vector2Subtract(shape.pos, windowPos);
+    return shapeWindowPos.x > 0 && shapeWindowPos.x < windowWidth &&
+           shapeWindowPos.y > 0 && shapeWindowPos.y < windowHeight;
+}
+
 // Tries to spawn shape if the new shapes pos isn't overlapping with existing shape pos.
-bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos) {
+bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos, bool ignoreWindowBounds) {
     Shape* shape;
 
     switch (type) {
@@ -72,12 +77,22 @@ bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos) {
     default: return false;
     }
 
-    if (!checkOverlapShape(*shapes, shape)) {
+    bool passWindowCheck = ignoreWindowBounds || !isShapeInWindow(*shape, Vector2Subtract(playerPos, Vector2(windowWidth / 2.0, windowHeight / 2.0)));
+
+    if (!checkOverlapShape(*shapes, shape) && passWindowCheck) {
         shapes->push_back(shape);
         return true;
     }
 
     return false;
+}
+
+void spawnShapeRandom(std::vector<Shape*>* shapes, const int type, const Vector2 minPos, const Vector2 maxPos, bool ignoreWindowBounds) {
+    for (int i = 0; i < 128; ++i) {
+        if (trySpawnShape(shapes, type, Vector2(GetRandomValue(minPos.x, maxPos.x), GetRandomValue(minPos.y, maxPos.y)), ignoreWindowBounds)) {
+            return;
+        }
+    }
 }
 
 // If tryDeleteShape succeeds then return true otherwise false.

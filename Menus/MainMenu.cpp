@@ -31,10 +31,10 @@ void mainMenu() {
 
     std::printf("MainMenuTest\n");
 
-    auto *playButton = new TextureButton(Vector2(0, -150), Vector2(242, 92), playTexture, playHoverTexture, playPressTexture);
-    auto *upgradeButton = new TextureButton(Vector2(0, -0), Vector2(353, 92), upgradesTexture, upgradesHoverTexture, upgradesPressTexture);
-    auto *optionsButton = new TextureButton(Vector2(0, 150), Vector2(320, 92), optionsTexture, optionsHoverTexture, optionsPressTexture);
-    auto *exitButton = new TextureButton(Vector2(0, 300), Vector2(242, 92), exitTexture, exitHoverTexture, exitPressTexture);
+    auto *playButton = new TextureButton(Vector2(0, -150), Vector2(242, 92), playTexture, playHoverTexture, playPressTexture, false);
+    auto *upgradeButton = new TextureButton(Vector2(0, -0), Vector2(353, 92), upgradesTexture, upgradesHoverTexture, upgradesPressTexture, false);
+    auto *optionsButton = new TextureButton(Vector2(0, 150), Vector2(320, 92), optionsTexture, optionsHoverTexture, optionsPressTexture, true);
+    auto *exitButton = new TextureButton(Vector2(0, 300), Vector2(242, 92), exitTexture, exitHoverTexture, exitPressTexture, false);
 
     // Shapes
     auto shapes = std::vector<Shape*>();
@@ -65,12 +65,11 @@ void mainMenu() {
         }
 
         if (shapeSpawnTimer == 0 && shapes.size() < 30) {
-            trySpawnShape(&shapes, 0, Vector2(GetRandomValue(50, windowWidth - 50), -50));
-
+            spawnShapeRandom(&shapes, 0, Vector2(50, -50), Vector2(windowWidth - 50, -40));
             if (shapes.size() % 4 == 2) {
-                trySpawnShape(&shapes, 1, Vector2(GetRandomValue(50, windowWidth - 50), -50));
+                spawnShapeRandom(&shapes, 1, Vector2(50, -50), Vector2(windowWidth - 50, -40));
             } else if (shapes.size() % 8 == 4) {
-                trySpawnShape(&shapes, 2, Vector2(GetRandomValue(50, windowWidth - 50), -50));
+                spawnShapeRandom(&shapes, 2, Vector2(50, -50), Vector2(windowWidth - 50, -40));
             }
 
             shapeSpawnTimer = 0.5;

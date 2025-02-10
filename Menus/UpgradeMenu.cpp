@@ -21,10 +21,10 @@ void upgradeMenu() {
 
     const Font textFont = LoadFontEx("resources/Fonts/JetBrainsMono-VariableFont_wght.ttf", 128, nullptr, 0);
 
-    auto *scoreMultiplierButton = new TextureButton(Vector2(0, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture);
-    auto *timeMultiplierButton = new TextureButton(Vector2(-200, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture);
-    auto *inputTimeLeftButton = new TextureButton(Vector2(200, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture);
-    auto *backButton = new TextureButton(Vector2(-890, -450), Vector2(73, 74), backTexture, backHoverTexture, backPressTexture);
+    auto *scoreMultiplierButton = new TextureButton(Vector2(0, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture, false);
+    auto *timeMultiplierButton = new TextureButton(Vector2(-200, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture, false);
+    auto *inputTimeLeftButton = new TextureButton(Vector2(200, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture, false);
+    auto *backButton = new TextureButton(Vector2(-890, -450), Vector2(73, 74), backTexture, backHoverTexture, backPressTexture, false);
 
     auto *colorButton1 = new RegularButton(Vector2(-150, 400),
         Vector2(100, 100), 0, Color(67, 222, 108, 255), WHITE, "");

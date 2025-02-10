@@ -31,18 +31,18 @@ void runGame() {
     constexpr float particleDelta = 0.01f;
 
     float deathTimer = 0.75f;
+    float screenShakeTimer = 0.1f;
 
     // Player Attributes
-    constexpr auto playerStartingPos = Vector2(0, 540);
+    playerPos = Vector2(0, 500);
     constexpr float playerRadius = 20.0f;
     constexpr float gravity = 2048.0f;
     constexpr float playerSpeed = 3.0f;
 
-    Vector2 playerPos = playerStartingPos;
-
     auto velocity = Vector2(0, 0);
 
     bool isMouseClicked = false;
+    bool shouldScreenShake = false;
     hasDied = false;
 
     // Player Related Info
@@ -64,14 +64,14 @@ void runGame() {
     camera.zoom = 1.25f * (windowHeight / 1080.0f);
 
     for (int i = 0; i < 75; i++) {
-        trySpawnShape(&shapes, 0, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
+        spawnShapeRandom(&shapes, 0, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
 
         if (i < 15) {
-            trySpawnShape(&shapes, 1, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
+            spawnShapeRandom(&shapes, 1, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
         }
 
         if (i < 2) {
-            trySpawnShape(&shapes, 2, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
+            spawnShapeRandom(&shapes, 2, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
         }
     }
 
@@ -155,6 +155,17 @@ void runGame() {
             timeMultiplier += 1.0;
         }
 
+        // Screen Shake
+        if (shouldScreenShake) {
+            screenShakeTimer -= delta;
+            if (screenShakeTimer >= 0) {
+                camera.target = Vector2(camera.target.x + GetRandomValue(-1, 1), camera.target.y + GetRandomValue(-1, 1));
+            } else {
+                screenShakeTimer = 0.1f;
+                shouldScreenShake = false;
+            }
+        }
+
         // Death Process
         if (hasDied) {
             deathTimer -= delta;
@@ -175,15 +186,15 @@ void runGame() {
 
             // Spawn shape in varying chances.
             if (GetRandomValue(0, 12) == 0) {
-                trySpawnShape(&shapes, 0, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
+                spawnShapeRandom(&shapes, 0, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
             }
 
             if (GetRandomValue(0, 24) == 0) {
-                trySpawnShape(&shapes, 1, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
+                spawnShapeRandom(&shapes, 1, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
             }
 
             if (GetRandomValue(0, 32) == 0) {
-                trySpawnShape(&shapes, 2, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
+                spawnShapeRandom(&shapes, 2, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
             }
         }
 
@@ -249,7 +260,7 @@ void runGame() {
                         case 0:
                             createDisplayScore(shapes, shape, 0, i);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
-                            trySpawnShape(&shapes, 0, Vector2(GetRandomValue(-3000 + 50, 3000 - 50), GetRandomValue(-1500, 980)));
+                            spawnShapeRandom(&shapes, 0, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
 
                             for (int i = 0; i < 12; ++i) {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 0);
@@ -280,6 +291,8 @@ void runGame() {
                     if (!hasDied) {
                         velocity.y = -1000.0;
                         velocity.x = velocity.x * 0.5f;
+
+                        shouldScreenShake = true;
 
                         scoreTimer = scoreTimerUpgrade;
                         inputTimeLeft = std::min(inputTimeLeft + 0.5f, 1.0f);
