@@ -106,3 +106,9 @@ bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, const int i
     return false;
 }
 
+void runPostProcessing(const Texture2D &texture, const Shader shader) {
+    BeginShaderMode(shader);
+    DrawTextureRec(texture, (Rectangle){0, 0, static_cast<float>(texture.width), static_cast<float>(-texture.height)}, Vector2(0, 0), WHITE);
+    EndShaderMode();
+}
+

@@ -63,6 +63,9 @@ void runGame() {
     camera.rotation = 0.0f;
     camera.zoom = 1.25f * (windowHeight / 1080.0f);
 
+    RenderTexture2D target = LoadRenderTexture(windowWidth, windowHeight);
+    const Shader shader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
+
     for (int i = 0; i < 75; i++) {
         spawnShapeRandom(&shapes, 0, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
 
@@ -316,7 +319,7 @@ void runGame() {
         }
 
         // Draw
-        BeginDrawing();
+        BeginTextureMode(target);
         ClearBackground(Color(40, 44, 52, 255));
 
         // Draw within the camera
@@ -363,6 +366,10 @@ void runGame() {
         DrawRectangleV(Vector2(-3000, -1670), Vector2(7500, 160), Color(33, 37, 43, 255));
 
         EndMode2D();
+        EndTextureMode();
+
+        BeginDrawing();
+        runPostProcessing(target.texture, shader);
 
         drawTextCentered(TextFormat("%d", score), windowWidth / 2.0f, 24, scoreSize, RAYWHITE);
         drawProgressBar(windowWidth / 2.0f, 128, 30, 600, WHITE, GRAY, inputTimeLeft);

@@ -12,6 +12,10 @@
 #include "Shapes/GoldCircleShape.h"
 #include "Shapes/TriangleShape.h"
 
+#if defined(PLATFORM_DESKTOP)
+    #define GLSL_VERSION            330
+#endif
+
 inline int windowWidth = 1920;
 inline int windowHeight = 1080;
 constexpr float physicsDelta = 1.0f / 240.0f;
@@ -59,5 +63,6 @@ bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape);
 bool trySpawnShape(std::vector<Shape*>* shapes, int type, Vector2 pos, bool ignoreWindowBounds = false);
 void spawnShapeRandom(std::vector<Shape*>* shapes, int type, Vector2 minPos, Vector2 maxPos, bool ignoreWindowBounds = false);
 bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, int index);
+void runPostProcessing(const Texture2D &texture, Shader shader);
 
 #endif //UTIL_H
