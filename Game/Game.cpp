@@ -5,7 +5,6 @@
 #include "Game.h"
 
 #include <cstdio>
-#include <unistd.h>
 #include <vector>
 
 #include "raylib.h"
@@ -63,8 +62,8 @@ void runGame() {
     camera.rotation = 0.0f;
     camera.zoom = 1.25f * (windowHeight / 1080.0f);
 
-    RenderTexture2D target = LoadRenderTexture(windowWidth, windowHeight);
-    const Shader shader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
+    RenderTexture2D shaderTarget = LoadRenderTexture(windowWidth, windowHeight);
+    const Shader bloomShader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
 
     for (int i = 0; i < 75; i++) {
         spawnShapeRandom(&shapes, 0, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
@@ -236,7 +235,12 @@ void runGame() {
             // Floor and Ceiling Collision
             if (playerPos.y > 1000 - playerRadius) {
                 playerPos.y = 1000 - playerRadius;
-                velocity.y = -velocity.y * 0.75f;
+
+                // Prevents the value from effecting player while stationary.
+                if (velocity.y > 0.1) {
+                    velocity.y = -velocity.y * 0.75f;
+                }
+
                 velocity.x = velocity.x * 0.99f;
 
                 inputTimeLeft = 1.0f;
@@ -311,7 +315,7 @@ void runGame() {
             // Camera movement based on playerPos and playerSpeed while keeping it clamp within game map.
             camera.target = Vector2Lerp(camera.target,
                 Vector2(
-                    std::clamp(playerPos.x, -3030.0f + (windowWidth / camera.zoom) / 2.0f, 3030.0f - (windowWidth / camera.zoom) / 2.0f),
+                    Clamp(playerPos.x, -3030.0f + (windowWidth / camera.zoom) / 2.0f, 3030.0f - (windowWidth / camera.zoom) / 2.0f),
                     std::min(std::max(playerPos.y, -1115.0f), 1080 / 1.8f)),
                     10.0f * physicsDelta);
 
@@ -319,7 +323,7 @@ void runGame() {
         }
 
         // Draw
-        BeginTextureMode(target);
+        BeginTextureMode(shaderTarget);
         ClearBackground(Color(40, 44, 52, 255));
 
         // Draw within the camera
@@ -369,7 +373,7 @@ void runGame() {
         EndTextureMode();
 
         BeginDrawing();
-        runPostProcessing(target.texture, shader);
+        runPostProcessing(shaderTarget.texture, bloomShader);
 
         drawTextCentered(TextFormat("%d", score), windowWidth / 2.0f, 24, scoreSize, RAYWHITE);
         drawProgressBar(windowWidth / 2.0f, 128, 30, 600, WHITE, GRAY, inputTimeLeft);

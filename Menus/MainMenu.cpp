@@ -36,6 +36,9 @@ void mainMenu() {
     auto *optionsButton = new TextureButton(Vector2(0, 150), Vector2(320, 92), optionsTexture, optionsHoverTexture, optionsPressTexture, true);
     auto *exitButton = new TextureButton(Vector2(0, 300), Vector2(242, 92), exitTexture, exitHoverTexture, exitPressTexture, false);
 
+    RenderTexture2D shaderTarget = LoadRenderTexture(windowWidth, windowHeight);
+    const Shader bloomShader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
+
     // Shapes
     auto shapes = std::vector<Shape*>();
 
@@ -164,7 +167,8 @@ void mainMenu() {
             drawTextCentered(TextFormat("%d", score), windowWidth / 2.0 - 500, windowHeight / 2.0 - 100, 40, GOLD);
         }
 
-        BeginDrawing();
+        BeginTextureMode(shaderTarget);
+        runPostProcessing(shaderTarget.texture, bloomShader);
         ClearBackground(Color(40, 44, 52, 255));
         DrawFPS(6, 6);
 
@@ -180,6 +184,10 @@ void mainMenu() {
         optionsButton->draw();
         exitButton->draw();
 
+        EndTextureMode();
+
+        BeginDrawing();
+        runPostProcessing(shaderTarget.texture, bloomShader);
         EndDrawing();
     }
 }

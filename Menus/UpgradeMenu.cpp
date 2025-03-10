@@ -33,6 +33,9 @@ void upgradeMenu() {
     auto *colorButton3 = new RegularButton(Vector2(150, 400),
         Vector2(100, 100), 0, Color(194, 74, 237, 255), WHITE, "");
 
+    RenderTexture2D shaderTarget = LoadRenderTexture(windowWidth, windowHeight);
+    const Shader bloomShader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
+
     while(!WindowShouldClose()) {
         if (!inUpgradeMenu) {
             delete scoreMultiplierButton;
@@ -99,7 +102,7 @@ void upgradeMenu() {
             inputTimeLeftCost = inputTimeLeftCost / 5 * 5;
         }
 
-        BeginDrawing();
+        BeginTextureMode(shaderTarget);
         ClearBackground(Color(40, 44, 52, 255));
         DrawFPS(6, 6);
 
@@ -128,6 +131,10 @@ void upgradeMenu() {
         drawTextCenteredFont(textFont, TextFormat("%.1f", inputTimeLeftUpgrade), windowWidth / 2.0 + 200, windowHeight / 2.0 + 75, 34, 0, WHITE);
         drawTextCenteredFont(textFont, TextFormat("%d", inputTimeLeftCost), windowWidth / 2.0 + 200, windowHeight / 2.0 + 225, 34, 0, WHITE);
 
+        EndTextureMode();
+
+        BeginDrawing();
+        runPostProcessing(shaderTarget.texture, bloomShader);
         EndDrawing();
     }
 }
