@@ -27,11 +27,11 @@ void upgradeMenu() {
     auto *backButton = new TextureButton(Vector2(-890, -450), Vector2(73, 74), backTexture, backHoverTexture, backPressTexture, false);
 
     auto *colorButton1 = new RegularButton(Vector2(-150, 400),
-        Vector2(100, 100), 0, Color(67, 222, 108, 255), WHITE, "");
+        Vector2(100, 100), 0, Color(67, 222, 108, 255), WHITE, "", true);
     auto *colorButton2 = new RegularButton(Vector2(0, 400),
-        Vector2(100, 100), 0, Color(52, 156, 243, 255), WHITE, "");
+        Vector2(100, 100), 0, Color(52, 156, 243, 255), WHITE, "", true);
     auto *colorButton3 = new RegularButton(Vector2(150, 400),
-        Vector2(100, 100), 0, Color(194, 74, 237, 255), WHITE, "");
+        Vector2(100, 100), 0, Color(194, 74, 237, 255), WHITE, "", true);
 
     RenderTexture2D shaderTarget = LoadRenderTexture(windowWidth, windowHeight);
     const Shader bloomShader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
