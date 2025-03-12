@@ -67,16 +67,25 @@ void upgradeMenu() {
 
         // Color Buttons
         if (colorButton1->checkButtonRegion()) {
+            colorButton2->toggled = false;
+            colorButton3->toggled = false;
+
             playerColor = Color(67, 222, 108, 255);
             playerColorOutline = Color(49, 120, 54, 255);
         }
 
         if (colorButton2->checkButtonRegion()) {
+            colorButton1->toggled = false;
+            colorButton3->toggled = false;
+
             playerColor = Color(52, 156, 243, 255);
             playerColorOutline = Color(31, 104, 150, 255);
         }
 
         if (colorButton3->checkButtonRegion()) {
+            colorButton1->toggled = false;
+            colorButton2->toggled = false;
+
             playerColor = Color(194, 74, 237, 255);
             playerColorOutline = Color(94, 50, 125, 255);
         }
