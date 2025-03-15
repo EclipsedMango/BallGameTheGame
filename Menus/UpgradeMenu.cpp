@@ -36,6 +36,23 @@ void upgradeMenu() {
     RenderTexture2D shaderTarget = LoadRenderTexture(windowWidth, windowHeight);
     const Shader bloomShader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
 
+    if (compareColors(playerColor, Color(67, 222, 108, 255))) {
+        colorButton1->toggled = true;
+
+        colorButton1->color = colorButton1->colorPress;
+        colorButton1->scale = 0.98;
+    } else if (compareColors(playerColor, Color(52, 156, 243, 255))) {
+        colorButton2->toggled = true;
+
+        colorButton2->color = colorButton2->colorPress;
+        colorButton2->scale = 0.98;
+    } else if (compareColors(playerColor, Color(194, 74, 237, 255))) {
+        colorButton3->toggled = true;
+
+        colorButton3->color = colorButton3->colorPress;
+        colorButton3->scale = 0.98;
+    }
+
     while(!WindowShouldClose()) {
         if (!inUpgradeMenu) {
             delete scoreMultiplierButton;
@@ -105,6 +122,7 @@ void upgradeMenu() {
         }
 
         if (inputTimeLeftButton->checkButtonRegion() && money >= inputTimeLeftCost && inputTimeLeftUpgrade < 24.0) {
+            inputTimeLeftStrength -= 0.05;
             inputTimeLeftUpgrade += 1.0;
             money -= inputTimeLeftCost;
             inputTimeLeftCost *= 2.0;
@@ -138,6 +156,7 @@ void upgradeMenu() {
 
         drawTextCenteredFont(textFont, "Time Left", windowWidth / 2.0 + 200, windowHeight / 2.0 + 25, 40, 0, WHITE);
         drawTextCenteredFont(textFont, TextFormat("%.1f", inputTimeLeftUpgrade), windowWidth / 2.0 + 200, windowHeight / 2.0 + 75, 34, 0, WHITE);
+        drawTextCenteredFont(textFont, TextFormat("%.2f", inputTimeLeftStrength), windowWidth / 2.0 + 200, windowHeight / 2.0 + 50, 34, 0, WHITE);
         drawTextCenteredFont(textFont, TextFormat("%d", inputTimeLeftCost), windowWidth / 2.0 + 200, windowHeight / 2.0 + 225, 34, 0, WHITE);
 
         EndTextureMode();

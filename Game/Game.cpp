@@ -120,7 +120,7 @@ void runGame() {
             if (!hasDied && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
                 isMouseClicked = true;
 
-                inputTimeLeft = std::max(inputTimeLeft - 0.75f, 0.0f);
+                inputTimeLeft = std::max(inputTimeLeft - inputTimeLeftStrength, 0.0f);
 
                 for (int i = 0; i < 5; ++i) {
                     spawnPlayerParticles(&particles, playerPos, velocity, 0);

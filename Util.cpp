@@ -87,6 +87,10 @@ bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos, boo
     return false;
 }
 
+bool compareColors(const Color color1, const Color color2) {
+    return color1.r == color2.r && color1.g == color2.g && color1.b == color2.b && color1.a == color2.a;
+}
+
 void spawnShapeRandom(std::vector<Shape*>* shapes, const int type, const Vector2 minPos, const Vector2 maxPos, bool ignoreWindowBounds) {
     for (int i = 0; i < 128; ++i) {
         if (trySpawnShape(shapes, type, Vector2(GetRandomValue(minPos.x, maxPos.x), GetRandomValue(minPos.y, maxPos.y)), ignoreWindowBounds)) {

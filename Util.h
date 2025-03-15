@@ -49,6 +49,7 @@ inline float scoreTimerUpgrade = 0.75f;
 inline float inputTimeLeft = 1.0f;
 inline int inputTimeLeftCost = 20000;
 inline float inputTimeLeftUpgrade = 4.0;
+inline float inputTimeLeftStrength = 0.75;
 
 inline auto playerColor = Color(52, 156, 243, 255);
 inline auto playerColorOutline = Color(31, 104, 150, 255);
@@ -61,6 +62,7 @@ void drawProgressBar(int posX, int posY, int height, int width, Color fillColor,
 float colorClamp(float colorValue);
 bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape);
 bool trySpawnShape(std::vector<Shape*>* shapes, int type, Vector2 pos, bool ignoreWindowBounds = false);
+bool compareColors(Color color1, Color color2);
 void spawnShapeRandom(std::vector<Shape*>* shapes, int type, Vector2 minPos, Vector2 maxPos, bool ignoreWindowBounds = false);
 bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, int index);
 void runPostProcessing(const Texture2D &texture, Shader shader);
