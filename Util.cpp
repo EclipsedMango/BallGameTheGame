@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "raymath.h"
+#include "Shapes/GravityShape.h"
 #include "Shapes/Shape.h"
 
 void drawTextCentered(const char* text, const int posX, const int posY, const int fontSize, const Color color) {
@@ -73,6 +74,9 @@ bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos, boo
         break;
     case 2:
         shape = new GoldCircleShape(pos);
+        break;
+    case 3:
+        shape = new GravityShape(pos);
         break;
     default: return false;
     }

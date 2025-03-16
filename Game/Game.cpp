@@ -11,6 +11,7 @@
 #include "raymath.h"
 #include "../Shapes/CircleShape.h"
 #include "../Util.h"
+#include "../Particles/GravityShapeParticles.h"
 #include "../Particles/Particle.h"
 #include "../Particles/PlayerDeathParticle.h"
 #include "../Particles/PlayerMovementParticles.h"
@@ -22,6 +23,7 @@
 void runGame() {
     // Timers
     float physicsTimer = 0.0f;
+    int physicsFrameCount = 0;
 
     float shapeSpawnTimer = 0.0f;
     constexpr float shapesDelta = 1.0f / 2.0f;
@@ -74,6 +76,10 @@ void runGame() {
 
         if (i < 2) {
             spawnShapeRandom(&shapes, 2, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
+        }
+
+        if (i < 12) {
+            spawnShapeRandom(&shapes, 3, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
         }
     }
 
@@ -203,6 +209,7 @@ void runGame() {
         // Physics Process
         while (physicsTimer > physicsDelta) {
             physicsTimer -= physicsDelta;
+            physicsFrameCount++;
 
             if (scoreSize > 64) {
                 scoreSize -= physicsDelta * 5;
@@ -216,6 +223,15 @@ void runGame() {
 
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
+
+                Vector2 screenPos = GetWorldToScreen2D(shape->pos, camera);
+
+                if (screenPos.x > 0 && screenPos.x < windowWidth && screenPos.y > 0 && screenPos.y < windowHeight) {
+                    if (shape->type == 3 && physicsFrameCount % 24 == 0) {
+                        spawnShapeParticles(&particles, shape->pos, Vector2(0, 0), 2);
+                    }
+                }
+
                 shape->physicsUpdate();
                 tryDeleteShape(&shapes, shape, i);
             }
@@ -261,6 +277,27 @@ void runGame() {
             // Shape Collision
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
+                float distance = Vector2Distance(playerPos, shape->pos);
+                const float maxDist = 500;
+
+                if (distance > maxDist) {
+                    continue;
+                }
+
+                if (shape->type == 3) {
+                    float strength = pow((maxDist - distance) / maxDist, 7.0);
+
+                    Vector2 vecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(playerPos, shape->pos)), strength * -150);
+                    velocity = Vector2Add(velocity, vecDir);
+
+                    // Funny stuff.
+                    // for (int j = 0; j < shapes.size(); ++j) {
+                    //     Shape* shape2 = shapes[j];
+                    //
+                    //     Vector2 shapeVecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(shape2->pos, shape->pos)), strength * -150);
+                    //     shape2->velocity = Vector2Add(shape2->velocity, shapeVecDir);
+                    // }
+                }
 
                 if (!hasDied && !shape->destoryShape && shape->type != 4 && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
                     switch (shape->type) {
@@ -291,6 +328,12 @@ void runGame() {
 
                             shape->destoryShape = true;
                             break;
+                        case 3:
+                            for (int i = 0; i < 16; ++i) {
+                                spawnPlayerParticles(&particles, playerPos, velocity, 1);
+                            }
+                        hasDied = true;
+                        break;
                         default: break;
                     }
 
@@ -396,6 +439,9 @@ void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapeP
             break;
         case 1:
             particles->push_back(new ShapeParticles(shapePos, playerVel, 10, Color(232, 184, 54)));
+            break;
+        case 2:
+            particles->push_back(new GravityShapeParticles(shapePos, 4, Color(126, 0, 176)));
             break;
         default: printf("This particle doesn't exist\n");
     }

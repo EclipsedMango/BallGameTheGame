@@ -53,6 +53,10 @@ add_executable(BallGameTheGame Main.cpp
         Buttons/RegularButton.cpp
         Buttons/RegularButton.h
         Menus/UpgradeMenu.cpp
-        Menus/UpgradeMenu.h)
+        Menus/UpgradeMenu.h
+        Shapes/GravityShape.cpp
+        Shapes/GravityShape.h
+        Particles/GravityShapeParticles.cpp
+        Particles/GravityShapeParticles.h)
 
 target_link_libraries(BallGameTheGame raylib)
