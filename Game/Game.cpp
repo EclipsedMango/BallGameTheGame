@@ -330,11 +330,11 @@ void runGame() {
                             shape->destoryShape = true;
                             break;
                         case BLACK_HOLE:
-                            for (int i = 0; i < 16; ++i) {
-                                spawnPlayerParticles(&particles, playerPos, velocity, 1);
-                            }
-                        hasDied = true;
-                        break;
+                             for (int i = 0; i < 16; ++i) {
+                                 spawnPlayerParticles(&particles, playerPos, velocity, 1);
+                             }
+                            hasDied = true;
+                            break;
                         default: break;
                     }
 
@@ -381,8 +381,23 @@ void runGame() {
             constexpr int lineCount = 100;
 
             for (int i = 0; i < lineCount; ++i) {
+                for (int i = 0; i < shapes.size(); ++i) {
+                    Shape* shape = shapes[i];
+                    float distance = Vector2Distance(pos, shape->pos);
+                    const float maxDist = 450;
+
+                    if (distance > maxDist) {
+                        continue;
+                    }
+
+                    if (shape->type == 3) {
+                        float strength = pow((maxDist - distance) / maxDist, 10.0);
+
+                        vecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(pos, shape->pos)), strength * -850);
+                        vel = Vector2Add(vel, vecDir);
+                    }
+                }
                 vel.y += gravity * physicsDelta;
-                vel = Vector2Add(vel, vecDir);
                 Vector2 newPos = Vector2Add(pos, Vector2MultiplyS(vel, physicsDelta));
                 DrawLineEx(pos, newPos, 12, Color(240, 240, 240, (1.0f - static_cast<float>(i) / static_cast<float>(lineCount)) * 255.0f));
                 pos = newPos;
