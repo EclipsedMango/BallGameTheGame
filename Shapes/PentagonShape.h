@@ -7,12 +7,12 @@
 #include "Shape.h"
 
 
-class TriangleShape final : public Shape {
+class PentagonShape final : public Shape {
 public:
-    explicit TriangleShape(Vector2 randomPos);
+    explicit PentagonShape(Vector2 randomPos);
     void draw() const override;
     void physicsUpdate() override;
-    TriangleShape() = default;
+    PentagonShape() = default;
 };
 
 

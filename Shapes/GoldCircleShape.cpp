@@ -8,7 +8,7 @@
 GoldCircleShape::GoldCircleShape(const Vector2 randomPos) {
     this->pos = randomPos;
     this->radius = 25 * 0.75;
-    this->type = 2;
+    this->type = GOLD_CIRCLE;
 }
 
 void GoldCircleShape::draw() const {

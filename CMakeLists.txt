@@ -30,8 +30,8 @@ add_executable(BallGameTheGame Main.cpp
         Util.h
         Shapes/CircleShape.cpp
         Shapes/CircleShape.h
-        Shapes/TriangleShape.cpp
-        Shapes/TriangleShape.h
+        Shapes/PentagonShape.cpp
+        Shapes/PentagonShape.h
         Shapes/GoldCircleShape.cpp
         Shapes/GoldCircleShape.h
         Shapes/ScoreText.cpp
@@ -57,6 +57,7 @@ add_executable(BallGameTheGame Main.cpp
         Shapes/GravityShape.cpp
         Shapes/GravityShape.h
         Particles/GravityShapeParticles.cpp
-        Particles/GravityShapeParticles.h)
+        Particles/GravityShapeParticles.h
+)
 
 target_link_libraries(BallGameTheGame raylib)

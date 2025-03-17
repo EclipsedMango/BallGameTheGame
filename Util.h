@@ -10,7 +10,7 @@
 #include "Shapes/Shape.h"
 #include "Shapes/CircleShape.h"
 #include "Shapes/GoldCircleShape.h"
-#include "Shapes/TriangleShape.h"
+#include "Shapes/PentagonShape.h"
 
 #if defined(PLATFORM_DESKTOP)
     #define GLSL_VERSION            330
@@ -61,9 +61,9 @@ Vector2 Vector2DivideS(Vector2 a, float b);
 void drawProgressBar(int posX, int posY, int height, int width, Color fillColor, Color emptyColor, float progress);
 float colorClamp(float colorValue);
 bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape);
-bool trySpawnShape(std::vector<Shape*>* shapes, int type, Vector2 pos, bool ignoreWindowBounds = false);
+bool trySpawnShape(std::vector<Shape*>* shapes, Shapes type, Vector2 pos, bool ignoreWindowBounds = false);
 bool compareColors(Color color1, Color color2);
-void spawnShapeRandom(std::vector<Shape*>* shapes, int type, Vector2 minPos, Vector2 maxPos, bool ignoreWindowBounds = false);
+void spawnShapeRandom(std::vector<Shape*>* shapes, Shapes type, Vector2 minPos, Vector2 maxPos, bool ignoreWindowBounds = false);
 bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, int index);
 void runPostProcessing(const Texture2D &texture, Shader shader);
 

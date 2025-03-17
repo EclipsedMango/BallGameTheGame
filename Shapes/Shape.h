@@ -7,6 +7,14 @@
 #include "raylib.h"
 #include "raymath.h"
 
+enum Shapes {
+    RED_CIRCLE,
+    GOLD_CIRCLE,
+    GREEN_PENTAGON,
+    BLACK_HOLE,
+    DISPLAY_SCORE
+};
+
 class Shape {
 public:
     virtual ~Shape();

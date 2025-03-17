@@ -7,7 +7,7 @@
 CircleShape::CircleShape(const Vector2 randomPos) {
     this->pos = randomPos;
     this->radius = 22;
-    this->type = 0;
+    this->type = RED_CIRCLE;
     this->lifeSpan = 255;
 }
 

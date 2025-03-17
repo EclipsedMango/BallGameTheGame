@@ -18,7 +18,7 @@
 #include "../Particles/ShapeParticles.h"
 #include "../Shapes/GoldCircleShape.h"
 #include "../Shapes/ScoreText.h"
-#include "../Shapes/TriangleShape.h"
+#include "../Shapes/PentagonShape.h"
 
 void runGame() {
     // Timers
@@ -26,7 +26,7 @@ void runGame() {
     int physicsFrameCount = 0;
 
     float shapeSpawnTimer = 0.0f;
-    constexpr float shapesDelta = 1.0f / 2.0f;
+    constexpr float shapesDelta = 4.0f;
 
     float particleTimer = 0.0f;
     constexpr float particleDelta = 0.01f;
@@ -41,6 +41,7 @@ void runGame() {
     constexpr float playerSpeed = 3.0f;
 
     auto velocity = Vector2(0, 0);
+    auto vecDir = Vector2(0, 0);
 
     bool isMouseClicked = false;
     bool shouldScreenShake = false;
@@ -68,18 +69,18 @@ void runGame() {
     const Shader bloomShader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
 
     for (int i = 0; i < 75; i++) {
-        spawnShapeRandom(&shapes, 0, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
+        spawnShapeRandom(&shapes, RED_CIRCLE, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
 
         if (i < 15) {
-            spawnShapeRandom(&shapes, 1, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
+            spawnShapeRandom(&shapes, GREEN_PENTAGON, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
         }
 
         if (i < 2) {
-            spawnShapeRandom(&shapes, 2, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
+            spawnShapeRandom(&shapes, GOLD_CIRCLE, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
         }
 
         if (i < 12) {
-            spawnShapeRandom(&shapes, 3, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
+            spawnShapeRandom(&shapes, BLACK_HOLE, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980), true);
         }
     }
 
@@ -194,15 +195,15 @@ void runGame() {
 
             // Spawn shape in varying chances.
             if (GetRandomValue(0, 12) == 0) {
-                spawnShapeRandom(&shapes, 0, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
+                spawnShapeRandom(&shapes, RED_CIRCLE, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
             }
 
             if (GetRandomValue(0, 24) == 0) {
-                spawnShapeRandom(&shapes, 1, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
+                spawnShapeRandom(&shapes, GREEN_PENTAGON, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
             }
 
-            if (GetRandomValue(0, 32) == 0) {
-                spawnShapeRandom(&shapes, 2, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
+            if (GetRandomValue(0, 128) == 0) {
+                spawnShapeRandom(&shapes, GOLD_CIRCLE, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
             }
         }
 
@@ -227,7 +228,7 @@ void runGame() {
                 Vector2 screenPos = GetWorldToScreen2D(shape->pos, camera);
 
                 if (screenPos.x > 0 && screenPos.x < windowWidth && screenPos.y > 0 && screenPos.y < windowHeight) {
-                    if (shape->type == 3 && physicsFrameCount % 24 == 0) {
+                    if (shape->type == 3 && physicsFrameCount % 16 == 0) {
                         spawnShapeParticles(&particles, shape->pos, Vector2(0, 0), 2);
                     }
                 }
@@ -278,16 +279,16 @@ void runGame() {
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
                 float distance = Vector2Distance(playerPos, shape->pos);
-                const float maxDist = 500;
+                const float maxDist = 450;
 
                 if (distance > maxDist) {
                     continue;
                 }
 
                 if (shape->type == 3) {
-                    float strength = pow((maxDist - distance) / maxDist, 7.0);
+                    float strength = pow((maxDist - distance) / maxDist, 10.0);
 
-                    Vector2 vecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(playerPos, shape->pos)), strength * -150);
+                    vecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(playerPos, shape->pos)), strength * -850);
                     velocity = Vector2Add(velocity, vecDir);
 
                     // Funny stuff.
@@ -299,12 +300,12 @@ void runGame() {
                     // }
                 }
 
-                if (!hasDied && !shape->destoryShape && shape->type != 4 && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
+                if (!hasDied && !shape->destoryShape && shape->type != DISPLAY_SCORE && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
                     switch (shape->type) {
-                        case 0:
+                        case RED_CIRCLE:
                             createDisplayScore(shapes, shape, 0, i);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
-                            spawnShapeRandom(&shapes, 0, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
+                            spawnShapeRandom(&shapes, RED_CIRCLE, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
 
                             for (int i = 0; i < 12; ++i) {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 0);
@@ -312,13 +313,13 @@ void runGame() {
 
                             shape->destoryShape = true;
                             break;
-                        case 1:
+                        case GREEN_PENTAGON:
                             for (int i = 0; i < 16; ++i) {
                                 spawnPlayerParticles(&particles, playerPos, velocity, 1);
                             }
                             hasDied = true;
                             break;
-                        case 2:
+                        case GOLD_CIRCLE:
                             createDisplayScore(shapes, shape, 1, i);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
 
@@ -328,7 +329,7 @@ void runGame() {
 
                             shape->destoryShape = true;
                             break;
-                        case 3:
+                        case BLACK_HOLE:
                             for (int i = 0; i < 16; ++i) {
                                 spawnPlayerParticles(&particles, playerPos, velocity, 1);
                             }
@@ -381,7 +382,8 @@ void runGame() {
 
             for (int i = 0; i < lineCount; ++i) {
                 vel.y += gravity * physicsDelta;
-                const Vector2 newPos = Vector2Add(pos, Vector2MultiplyS(vel, physicsDelta));
+                vel = Vector2Add(vel, vecDir);
+                Vector2 newPos = Vector2Add(pos, Vector2MultiplyS(vel, physicsDelta));
                 DrawLineEx(pos, newPos, 12, Color(240, 240, 240, (1.0f - static_cast<float>(i) / static_cast<float>(lineCount)) * 255.0f));
                 pos = newPos;
             }
@@ -441,7 +443,7 @@ void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapeP
             particles->push_back(new ShapeParticles(shapePos, playerVel, 10, Color(232, 184, 54)));
             break;
         case 2:
-            particles->push_back(new GravityShapeParticles(shapePos, 4, Color(126, 0, 176)));
+            particles->push_back(new GravityShapeParticles(shapePos, 3, Color(126, 0, 176)));
             break;
         default: printf("This particle doesn't exist\n");
     }

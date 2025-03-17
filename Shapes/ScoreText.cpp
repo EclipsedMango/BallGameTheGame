@@ -7,7 +7,7 @@
 ScoreText::ScoreText(const Vector2 pos, const float displayScore) {
     this->pos = pos;
     this->radius = -1000;
-    this->type = 4;
+    this->type = DISPLAY_SCORE;
     this->displayScore = displayScore;
     this->colorAlpha = 255;
 }

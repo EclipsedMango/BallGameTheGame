@@ -10,7 +10,7 @@ public:
     void physicsUpdate() override;
 
     float colorAlpha = 100;
-    int radius = 250;
+    int rad = 400;
 };
 
 #endif //GRAVITYSHAPEPARTICLES_H

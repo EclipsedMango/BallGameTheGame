@@ -68,11 +68,11 @@ void mainMenu() {
         }
 
         if (shapeSpawnTimer == 0 && shapes.size() < 30) {
-            spawnShapeRandom(&shapes, 0, Vector2(50, -50), Vector2(windowWidth - 50, -40));
+            spawnShapeRandom(&shapes, RED_CIRCLE, Vector2(50, -50), Vector2(windowWidth - 50, -40));
             if (shapes.size() % 4 == 2) {
-                spawnShapeRandom(&shapes, 1, Vector2(50, -50), Vector2(windowWidth - 50, -40));
+                spawnShapeRandom(&shapes, GREEN_PENTAGON, Vector2(50, -50), Vector2(windowWidth - 50, -40));
             } else if (shapes.size() % 8 == 4) {
-                spawnShapeRandom(&shapes, 2, Vector2(50, -50), Vector2(windowWidth - 50, -40));
+                spawnShapeRandom(&shapes, GOLD_CIRCLE, Vector2(50, -50), Vector2(windowWidth - 50, -40));
             }
 
             shapeSpawnTimer = 0.5;

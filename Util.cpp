@@ -4,6 +4,7 @@
 
 #include "Util.h"
 
+#include <cstdio>
 #include <vector>
 
 #include "raymath.h"
@@ -62,20 +63,20 @@ bool isShapeInWindow(Shape shape, const Vector2 windowPos) {
 }
 
 // Tries to spawn shape if the new shapes pos isn't overlapping with existing shape pos.
-bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos, bool ignoreWindowBounds) {
+bool trySpawnShape(std::vector<Shape*>* shapes, const Shapes type, Vector2 pos, bool ignoreWindowBounds) {
     Shape* shape;
 
     switch (type) {
-    case 0:
+    case RED_CIRCLE:
         shape = new CircleShape(pos);
         break;
-    case 1:
-        shape = new TriangleShape(pos);
+    case GREEN_PENTAGON:
+        shape = new PentagonShape(pos);
         break;
-    case 2:
+    case GOLD_CIRCLE:
         shape = new GoldCircleShape(pos);
         break;
-    case 3:
+    case BLACK_HOLE:
         shape = new GravityShape(pos);
         break;
     default: return false;
@@ -88,6 +89,7 @@ bool trySpawnShape(std::vector<Shape*>* shapes, const int type, Vector2 pos, boo
         return true;
     }
 
+    delete shape;
     return false;
 }
 
@@ -95,12 +97,14 @@ bool compareColors(const Color color1, const Color color2) {
     return color1.r == color2.r && color1.g == color2.g && color1.b == color2.b && color1.a == color2.a;
 }
 
-void spawnShapeRandom(std::vector<Shape*>* shapes, const int type, const Vector2 minPos, const Vector2 maxPos, bool ignoreWindowBounds) {
-    for (int i = 0; i < 128; ++i) {
+void spawnShapeRandom(std::vector<Shape*>* shapes, const Shapes type, const Vector2 minPos, const Vector2 maxPos, bool ignoreWindowBounds) {
+    for (int i = 0; i < 128; i++) {
         if (trySpawnShape(shapes, type, Vector2(GetRandomValue(minPos.x, maxPos.x), GetRandomValue(minPos.y, maxPos.y)), ignoreWindowBounds)) {
             return;
         }
     }
+
+    printf("\nFailed to spawn to spawn shape.\n");
 }
 
 // If tryDeleteShape succeeds then return true otherwise false.

@@ -4,17 +4,15 @@
 GravityShapeParticles::GravityShapeParticles(const Vector2 shapePos, const float size, const Color color) {
     Vector2 randomPoint;
     while (true) {
-        float x = GetRandomValue(-radius, radius);
-        float y = GetRandomValue(-radius, radius);
+        float x = GetRandomValue(-rad, rad);
+        float y = GetRandomValue(-rad, rad);
 
-        if (x * x + y * y < radius * radius) {
+        if (x * x + y * y < rad * rad) {
             randomPoint = Vector2(x, y);
             break;
         }
     }
 
-    // this->pos = Vector2(GetRandomValue(shapePos.x - radius - 50, shapePos.x + radius + 50),
-    //                     GetRandomValue(shapePos.y - radius - 50, shapePos.y + radius + 50));
     this->pos = Vector2Add(randomPoint, shapePos);
     this->size = size;
     this->lifespan = 20;
@@ -30,7 +28,7 @@ void GravityShapeParticles::draw() const {
 }
 
 void GravityShapeParticles::physicsUpdate() {
-    size -= physicsDelta * 10.0;
+    size -= physicsDelta * 8.0;
     pos.x += -velocity.x * 0.4f * physicsDelta * GetRandomValue(1, 10);
     pos.y += -velocity.y * 0.4f * physicsDelta * GetRandomValue(1, 10);
 

@@ -9,6 +9,8 @@ public:
     void draw() const override;
     void physicsUpdate() override;
     GravityShape() = default;
+
+    float textureRadius = 34;
 };
 
 #endif //GRAVITYSHAPE_H
