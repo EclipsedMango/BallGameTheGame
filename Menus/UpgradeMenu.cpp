@@ -24,6 +24,7 @@ void upgradeMenu() {
     auto *scoreMultiplierButton = new TextureButton(Vector2(0, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture, false);
     auto *timeMultiplierButton = new TextureButton(Vector2(-200, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture, false);
     auto *inputTimeLeftButton = new TextureButton(Vector2(200, 150), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture, false);
+    auto *destroyPentagonButton = new TextureButton(Vector2(-200, -120), Vector2(73, 74), plusTexture, plusHoverTexture, plusPressTexture, true);
     auto *backButton = new TextureButton(Vector2(-890, -450), Vector2(73, 74), backTexture, backHoverTexture, backPressTexture, false);
 
     auto *colorButton1 = new RegularButton(Vector2(-150, 400),
@@ -58,6 +59,7 @@ void upgradeMenu() {
             delete scoreMultiplierButton;
             delete timeMultiplierButton;
             delete inputTimeLeftButton;
+            delete destroyPentagonButton;
             delete backButton;
 
             delete colorButton1;
@@ -129,6 +131,11 @@ void upgradeMenu() {
             inputTimeLeftCost = inputTimeLeftCost / 5 * 5;
         }
 
+        if (destroyPentagonButton->checkButtonRegion() && money >= destroyPentagonCost) {
+            canDestroyPentagon = !canDestroyPentagon;
+            money -= destroyPentagonCost;
+        }
+
         BeginTextureMode(shaderTarget);
         ClearBackground(Color(40, 44, 52, 255));
         DrawFPS(6, 6);
@@ -136,6 +143,7 @@ void upgradeMenu() {
         scoreMultiplierButton->draw();
         timeMultiplierButton->draw();
         inputTimeLeftButton->draw();
+        destroyPentagonButton->draw();
 
         backButton->draw();
 
@@ -158,6 +166,10 @@ void upgradeMenu() {
         drawTextCenteredFont(textFont, TextFormat("%.1f", inputTimeLeftUpgrade), windowWidth / 2.0 + 200, windowHeight / 2.0 + 75, 34, 0, WHITE);
         drawTextCenteredFont(textFont, TextFormat("%.2f", inputTimeLeftStrength), windowWidth / 2.0 + 200, windowHeight / 2.0 + 50, 34, 0, WHITE);
         drawTextCenteredFont(textFont, TextFormat("%d", inputTimeLeftCost), windowWidth / 2.0 + 200, windowHeight / 2.0 + 225, 34, 0, WHITE);
+
+        drawTextCenteredFont(textFont, "Extra Damage", windowWidth / 2.0 - 200, windowHeight / 2.0 - 245, 40, 0, WHITE);
+        drawTextCenteredFont(textFont, TextFormat("%i", destroyPentagonCost), windowWidth / 2.0 - 200, windowHeight / 2.0 - 45, 34, 0, WHITE);
+        drawTextCenteredFont(textFont, TextFormat("%i", canDestroyPentagon), windowWidth / 2.0 - 200, windowHeight / 2.0 - 195, 34, 0, WHITE);
 
         EndTextureMode();
 

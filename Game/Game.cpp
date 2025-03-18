@@ -290,14 +290,6 @@ void runGame() {
 
                     vecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(playerPos, shape->pos)), strength * -850);
                     velocity = Vector2Add(velocity, vecDir);
-
-                    // Funny stuff.
-                    // for (int j = 0; j < shapes.size(); ++j) {
-                    //     Shape* shape2 = shapes[j];
-                    //
-                    //     Vector2 shapeVecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(shape2->pos, shape->pos)), strength * -150);
-                    //     shape2->velocity = Vector2Add(shape2->velocity, shapeVecDir);
-                    // }
                 }
 
                 if (!hasDied && !shape->destoryShape && shape->type != DISPLAY_SCORE && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
@@ -307,30 +299,41 @@ void runGame() {
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
                             spawnShapeRandom(&shapes, RED_CIRCLE, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
 
-                            for (int i = 0; i < 12; ++i) {
+                            for (int j = 0; j < 12; ++j) {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 0);
                             }
 
                             shape->destoryShape = true;
                             break;
                         case GREEN_PENTAGON:
-                            for (int i = 0; i < 16; ++i) {
-                                spawnPlayerParticles(&particles, playerPos, velocity, 1);
+                            if (!canDestroyPentagon) {
+                                for (int i = 0; i < 16; ++i) {
+                                    spawnPlayerParticles(&particles, playerPos, velocity, 1);
+                                }
+                                hasDied = true;
+                            } else {
+                                createDisplayScore(shapes, shape, 1, i);
+                                shapes.push_back(new ScoreText(shape->pos, displayScore));
+
+                                for (int j = 0; j < 12; ++j) {
+                                    spawnShapeParticles(&particles, shape->pos, velocity, 3);
+                                }
+                                
+                                shape->destoryShape = true;
                             }
-                            hasDied = true;
                             break;
                         case GOLD_CIRCLE:
                             createDisplayScore(shapes, shape, 1, i);
                             shapes.push_back(new ScoreText(shape->pos, displayScore));
 
-                            for (int i = 0; i < 8; ++i) {
+                            for (int j = 0; j < 8; ++j) {
                                 spawnShapeParticles(&particles, shape->pos, velocity, 1);
                             }
 
                             shape->destoryShape = true;
                             break;
                         case BLACK_HOLE:
-                             for (int i = 0; i < 16; ++i) {
+                             for (int j = 0; j < 16; ++j) {
                                  spawnPlayerParticles(&particles, playerPos, velocity, 1);
                              }
                             hasDied = true;
@@ -460,6 +463,8 @@ void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapeP
         case 2:
             particles->push_back(new GravityShapeParticles(shapePos, 3, Color(126, 0, 176)));
             break;
+        case 3:
+            particles->push_back(new ShapeParticles(shapePos, playerVel, 18, Color(41, 146, 74)));
         default: printf("This particle doesn't exist\n");
     }
 }

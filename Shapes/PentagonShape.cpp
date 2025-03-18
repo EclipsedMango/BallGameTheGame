@@ -8,8 +8,9 @@
 
 PentagonShape::PentagonShape(const Vector2 randomPos) {
     this->pos = randomPos;
-    this->radius = 25 * 1.25;
+    this->radius = 32;
     this->type = GREEN_PENTAGON;
+    this->lifeSpan = 20;
     this->rotation = static_cast<float>(GetRandomValue(0, 1024)) / 1024.0f * 360.0f;
 }
 
@@ -20,6 +21,19 @@ void PentagonShape::draw() const {
 
 void PentagonShape::physicsUpdate() {
     pos = Vector2Add(pos, Vector2MultiplyS(velocity, physicsDelta));
+
+    if (destoryShape) {
+        if (radius > 0) {
+            radius -= physicsDelta * 256.0;
+        }
+
+        if (lifeSpan > 0) {
+            lifeSpan -= physicsDelta * 10;
+            isDead = false;
+        } else {
+            isDead = true;
+        }
+    }
 
     rotation += physicsDelta * 180.0f;
 }

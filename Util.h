@@ -51,6 +51,9 @@ inline int inputTimeLeftCost = 20000;
 inline float inputTimeLeftUpgrade = 4.0;
 inline float inputTimeLeftStrength = 0.75;
 
+inline bool canDestroyPentagon = false;
+inline int destroyPentagonCost = 500000;
+
 inline auto playerColor = Color(52, 156, 243, 255);
 inline auto playerColorOutline = Color(31, 104, 150, 255);
 
