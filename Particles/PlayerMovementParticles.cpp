@@ -3,6 +3,7 @@
 //
 
 #include "PlayerMovementParticles.h"
+#include "../Util.h"
 
 PlayerMovementParticles::PlayerMovementParticles(Vector2 playerPos, float size, Vector2 playerVel) {
     this->pos = playerPos;

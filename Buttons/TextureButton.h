@@ -23,6 +23,7 @@ public:
     Texture2D texturePress{};
     bool toggle = false;
     bool toggled = false;
+    bool updateValue = false;
 };
 
 

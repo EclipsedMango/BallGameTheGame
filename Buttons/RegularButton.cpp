@@ -41,10 +41,7 @@ bool RegularButton::checkButtonRegion() {
                     scale = 0.98;
                 }
             } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-                if (toggled) {
-                    return true;
-                }
-                return false;
+                return true;
             }
         } else {
             if (!toggled) {

@@ -7,10 +7,9 @@
 #include <vector>
 
 #include "raylib.h"
+#include "Player.h"
+#include "Particles/Particle.h"
 #include "Shapes/Shape.h"
-#include "Shapes/CircleShape.h"
-#include "Shapes/GoldCircleShape.h"
-#include "Shapes/PentagonShape.h"
 
 #if defined(PLATFORM_DESKTOP)
     #define GLSL_VERSION            330
@@ -21,8 +20,9 @@ inline int windowHeight = 1080;
 constexpr float physicsDelta = 1.0f / 240.0f;
 
 inline bool shouldGameClose = false;
+inline bool shouldScreenShake = false;
 
-inline Vector2 playerPos = Vector2(0, 0);
+inline Player* player = new Player();
 
 inline bool inMenu = true;
 inline bool inUpgradeMenu = false;
@@ -54,9 +54,6 @@ inline float inputTimeLeftStrength = 0.75;
 inline bool canDestroyPentagon = false;
 inline int destroyPentagonCost = 500000;
 
-inline auto playerColor = Color(52, 156, 243, 255);
-inline auto playerColorOutline = Color(31, 104, 150, 255);
-
 void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color color);
 void drawTextCenteredFont(const Font &font, const char* text, float posX, float posY, int fontSize, float fontSpacing, Color color);
 Vector2 Vector2MultiplyS(Vector2 a, float b);
@@ -68,6 +65,9 @@ bool trySpawnShape(std::vector<Shape*>* shapes, Shapes type, Vector2 pos, bool i
 bool compareColors(Color color1, Color color2);
 void spawnShapeRandom(std::vector<Shape*>* shapes, Shapes type, Vector2 minPos, Vector2 maxPos, bool ignoreWindowBounds = false);
 bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, int index);
+void spawnShapeParticles(std::vector<Particle*>* particles, Vector2 shapePos, Vector2 playerVel, Shapes type);
+void spawnPlayerParticles(std::vector<Particle*>* particles, Vector2 playerPos, Vector2 playerVel, int type);
+void createDisplayScore (Shapes type);
 void runPostProcessing(const Texture2D &texture, Shader shader);
 
 #endif //UTIL_H

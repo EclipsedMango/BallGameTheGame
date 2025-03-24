@@ -1,5 +1,7 @@
 
 #include "GravityShapeParticles.h"
+#include "raymath.h"
+#include "../Util.h"
 
 GravityShapeParticles::GravityShapeParticles(const Vector2 shapePos, const float size, const Color color) {
     Vector2 randomPoint;

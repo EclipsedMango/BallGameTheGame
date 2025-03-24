@@ -3,6 +3,7 @@
 //
 
 #include "PlayerDeathParticle.h"
+#include "../Util.h"
 
 PlayerDeathParticle::PlayerDeathParticle(const Vector2 playerPos, const float size, const Vector2 playerVel) {
     this->pos = playerPos;
@@ -17,7 +18,7 @@ PlayerDeathParticle::PlayerDeathParticle(const Vector2 playerPos, const float si
 
 void PlayerDeathParticle::draw() const {
     if (lifespan > 0) {
-        DrawCircleV(pos, size, Color(playerColor.r, playerColor.g, playerColor.b, colorAlpha));
+        DrawCircleV(pos, size, Color(player->playerColor.r, player->playerColor.g, player->playerColor.b, colorAlpha));
     }
 }
 

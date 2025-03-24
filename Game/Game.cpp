@@ -9,16 +9,9 @@
 
 #include "raylib.h"
 #include "raymath.h"
-#include "../Shapes/CircleShape.h"
+#include "../CollisionCheck.h"
 #include "../Util.h"
-#include "../Particles/GravityShapeParticles.h"
 #include "../Particles/Particle.h"
-#include "../Particles/PlayerDeathParticle.h"
-#include "../Particles/PlayerMovementParticles.h"
-#include "../Particles/ShapeParticles.h"
-#include "../Shapes/GoldCircleShape.h"
-#include "../Shapes/ScoreText.h"
-#include "../Shapes/PentagonShape.h"
 
 void runGame() {
     // Timers
@@ -34,17 +27,9 @@ void runGame() {
     float deathTimer = 0.75f;
     float screenShakeTimer = 0.1f;
 
-    // Player Attributes
-    playerPos = Vector2(0, 500);
-    constexpr float playerRadius = 20.0f;
-    constexpr float gravity = 2048.0f;
-    constexpr float playerSpeed = 3.0f;
-
-    auto velocity = Vector2(0, 0);
     auto vecDir = Vector2(0, 0);
 
     bool isMouseClicked = false;
-    bool shouldScreenShake = false;
     hasDied = false;
 
     // Player Related Info
@@ -58,9 +43,13 @@ void runGame() {
     // Particles
     auto particles = std::vector<Particle*>();
 
+    // reset player values.
+    player->playerPos = Vector2(0, 500);
+    player->velocity = Vector2(0, 0);
+
     // Camera Attributes
     Camera2D camera = {0};
-    camera.target = Vector2(playerPos.x, playerPos.y);
+    camera.target = Vector2(player->playerPos.x, player->playerPos.y);
     camera.offset = Vector2(windowWidth / 2.0f, windowHeight / 2.0f);
     camera.rotation = 0.0f;
     camera.zoom = 1.25f * (windowHeight / 1080.0f);
@@ -130,7 +119,7 @@ void runGame() {
                 inputTimeLeft = std::max(inputTimeLeft - inputTimeLeftStrength, 0.0f);
 
                 for (int i = 0; i < 5; ++i) {
-                    spawnPlayerParticles(&particles, playerPos, velocity, 0);
+                    spawnPlayerParticles(&particles, player->playerPos, player->velocity, 0);
                 }
             }
         } else if (inputTimeLeft == 0) {
@@ -216,11 +205,7 @@ void runGame() {
                 scoreSize -= physicsDelta * 5;
             }
 
-            // Update players position every physics frame.
-            if (!hasDied) {
-                velocity.y += gravity * physicsDelta;
-                playerPos = Vector2Add(playerPos, Vector2MultiplyS(velocity, physicsDelta));
-            }
+            player->physicsUpdate();
 
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
@@ -229,7 +214,7 @@ void runGame() {
 
                 if (screenPos.x > 0 && screenPos.x < windowWidth && screenPos.y > 0 && screenPos.y < windowHeight) {
                     if (shape->type == 3 && physicsFrameCount % 16 == 0) {
-                        spawnShapeParticles(&particles, shape->pos, Vector2(0, 0), 2);
+                        spawnShapeParticles(&particles, shape->pos, Vector2(0, 0), BLACK_HOLE);
                     }
                 }
 
@@ -246,124 +231,20 @@ void runGame() {
 
             // Set velocity based on the distance the cursor is to the player and multiply by playerSpeed.
             if (isMouseClicked) {
-                velocity = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
+                player->velocity = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), player->playerPos), player->speed);
             }
 
-            // Floor and Ceiling Collision
-            if (playerPos.y > 1000 - playerRadius) {
-                playerPos.y = 1000 - playerRadius;
-
-                // Prevents the value from effecting player while stationary.
-                if (velocity.y > 0.1) {
-                    velocity.y = -velocity.y * 0.75f;
-                }
-
-                velocity.x = velocity.x * 0.99f;
-
-                inputTimeLeft = 1.0f;
-            } else if (playerPos.y < -1480 - playerRadius) {
-                playerPos.y = -1480 - playerRadius;
-                velocity.y = -velocity.y * 0.75f;
-            }
-
-            // Wall Collision
-            if (playerPos.x > 3000 - playerRadius) {
-                playerPos.x = 3000 - playerRadius;
-                velocity.x = -velocity.x * 0.75f;
-            } else if (playerPos.x < -3000 + playerRadius) {
-                playerPos.x = -3000 + playerRadius;
-                velocity.x = -velocity.x * 0.75f;
-            }
-
-            // Shape Collision
+            // Calculates the collision then applies rewards.
             for (int i = 0; i < shapes.size(); ++i) {
                 Shape* shape = shapes[i];
-                float distance = Vector2Distance(playerPos, shape->pos);
-                const float maxDist = 450;
-
-                if (distance > maxDist) {
-                    continue;
-                }
-
-                if (shape->type == 3) {
-                    float strength = pow((maxDist - distance) / maxDist, 10.0);
-
-                    vecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(playerPos, shape->pos)), strength * -850);
-                    velocity = Vector2Add(velocity, vecDir);
-                }
-
-                if (!hasDied && !shape->destoryShape && shape->type != DISPLAY_SCORE && Vector2DistanceSqr(shape->pos, playerPos) < pow(shape->radius + playerRadius, 2.0)) {
-                    switch (shape->type) {
-                        case RED_CIRCLE:
-                            createDisplayScore(shapes, shape, 0, i);
-                            shapes.push_back(new ScoreText(shape->pos, displayScore));
-                            spawnShapeRandom(&shapes, RED_CIRCLE, Vector2(-3000 + 50, -1500), Vector2(3000 - 50, 980));
-
-                            for (int j = 0; j < 12; ++j) {
-                                spawnShapeParticles(&particles, shape->pos, velocity, 0);
-                            }
-
-                            shape->destoryShape = true;
-                            break;
-                        case GREEN_PENTAGON:
-                            if (!canDestroyPentagon) {
-                                for (int i = 0; i < 16; ++i) {
-                                    spawnPlayerParticles(&particles, playerPos, velocity, 1);
-                                }
-                                hasDied = true;
-                            } else {
-                                createDisplayScore(shapes, shape, 1, i);
-                                shapes.push_back(new ScoreText(shape->pos, displayScore));
-
-                                for (int j = 0; j < 12; ++j) {
-                                    spawnShapeParticles(&particles, shape->pos, velocity, 3);
-                                }
-                                
-                                shape->destoryShape = true;
-                            }
-                            break;
-                        case GOLD_CIRCLE:
-                            createDisplayScore(shapes, shape, 1, i);
-                            shapes.push_back(new ScoreText(shape->pos, displayScore));
-
-                            for (int j = 0; j < 8; ++j) {
-                                spawnShapeParticles(&particles, shape->pos, velocity, 1);
-                            }
-
-                            shape->destoryShape = true;
-                            break;
-                        case BLACK_HOLE:
-                             for (int j = 0; j < 16; ++j) {
-                                 spawnPlayerParticles(&particles, playerPos, velocity, 1);
-                             }
-                            hasDied = true;
-                            break;
-                        default: break;
-                    }
-
-                    // Rewards for destroying a safe shape.
-                    if (!hasDied) {
-                        velocity.y = -1000.0;
-                        velocity.x = velocity.x * 0.5f;
-
-                        shouldScreenShake = true;
-
-                        scoreTimer = scoreTimerUpgrade;
-                        inputTimeLeft = std::min(inputTimeLeft + 0.5f, 1.0f);
-
-                        if (scoreMultiplier < scoreMultiplierMax) {
-                            scoreMultiplier++;
-                        }
-                    }
-                    break;
-                }
+                CollisionCheck().checkCollision(shapes, particles, player, vecDir, i, shape);
             }
 
             // Camera movement based on playerPos and playerSpeed while keeping it clamp within game map.
             camera.target = Vector2Lerp(camera.target,
                 Vector2(
-                    Clamp(playerPos.x, -3030.0f + (windowWidth / camera.zoom) / 2.0f, 3030.0f - (windowWidth / camera.zoom) / 2.0f),
-                    std::min(std::max(playerPos.y, -1115.0f), 1080 / 1.8f)),
+                    Clamp(player->playerPos.x, -3030.0f + (windowWidth / camera.zoom) / 2.0f, 3030.0f - (windowWidth / camera.zoom) / 2.0f),
+                    std::min(std::max(player->playerPos.y, -1115.0f), 1080 / 1.8f)),
                     10.0f * physicsDelta);
 
             isMouseClicked = false;
@@ -376,36 +257,7 @@ void runGame() {
         // Draw within the camera
         BeginMode2D(camera);
 
-        // Velocity Preview
-        if (!hasDied && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && inputTimeLeft > 0.0f) {
-            Vector2 vel = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), playerPos), playerSpeed);
-            Vector2 pos = playerPos;
-
-            constexpr int lineCount = 100;
-
-            for (int i = 0; i < lineCount; ++i) {
-                for (int i = 0; i < shapes.size(); ++i) {
-                    Shape* shape = shapes[i];
-                    float distance = Vector2Distance(pos, shape->pos);
-                    const float maxDist = 450;
-
-                    if (distance > maxDist) {
-                        continue;
-                    }
-
-                    if (shape->type == 3) {
-                        float strength = pow((maxDist - distance) / maxDist, 10.0);
-
-                        vecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(pos, shape->pos)), strength * -850);
-                        vel = Vector2Add(vel, vecDir);
-                    }
-                }
-                vel.y += gravity * physicsDelta;
-                Vector2 newPos = Vector2Add(pos, Vector2MultiplyS(vel, physicsDelta));
-                DrawLineEx(pos, newPos, 12, Color(240, 240, 240, (1.0f - static_cast<float>(i) / static_cast<float>(lineCount)) * 255.0f));
-                pos = newPos;
-            }
-        }
+        createVelocityPreview(shapes, vecDir, camera);
 
         // Draw Particles
         for (Particle* particle: particles) {
@@ -417,11 +269,7 @@ void runGame() {
             shape->draw();
         }
 
-        // Player
-        if (!hasDied) {
-            DrawCircle(playerPos.x, playerPos.y, 20, playerColorOutline);
-            DrawCircle(playerPos.x, playerPos.y, 16, playerColor);
-        }
+        player->draw();
 
         // Floor
         DrawRectangleV(Vector2(-3000, 1080 - 80.0f), Vector2(7500, 160), Color(33, 37, 43, 255));
@@ -452,51 +300,35 @@ void runGame() {
     }
 }
 
-void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapePos, const Vector2 playerVel, const int type) {
-    switch (type) {
-        case 0:
-            particles->push_back(new ShapeParticles(shapePos, playerVel, 15, Color(236, 55, 82)));
-            break;
-        case 1:
-            particles->push_back(new ShapeParticles(shapePos, playerVel, 10, Color(232, 184, 54)));
-            break;
-        case 2:
-            particles->push_back(new GravityShapeParticles(shapePos, 3, Color(126, 0, 176)));
-            break;
-        case 3:
-            particles->push_back(new ShapeParticles(shapePos, playerVel, 18, Color(41, 146, 74)));
-        default: printf("This particle doesn't exist\n");
-    }
-}
+void createVelocityPreview(const std::vector<Shape*> &shapes, Vector2 vecDir, const Camera2D &camera) {
+    // Velocity Preview
+    if (!hasDied && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && inputTimeLeft > 0.0f) {
+        Vector2 vel = Vector2MultiplyS(Vector2Subtract(GetScreenToWorld2D(GetMousePosition(), camera), player->playerPos), player->speed);
+        Vector2 pos = player->playerPos;
 
-void spawnPlayerParticles(std::vector<Particle*>* particles, const Vector2 playerPos, const Vector2 playerVel, const int type) {
-    switch (type) {
-        case 0:
-            particles->push_back(new PlayerMovementParticles(playerPos, 8, playerVel));
-            break;
-        case 1:
-            particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-30, 30)),
-                GetRandomValue(playerPos.y, playerPos.y - 45)), 16, playerVel));
-            break;
-        default: printf("This PlayerParticle doesn't exist\n");
-    }
-}
+        constexpr int lineCount = 100;
 
-void createDisplayScore (std::vector<Shape*> shapes, const Shape* shape, const int type, const int index) {
-    shape = shapes[index];
+        for (int i = 0; i < lineCount; ++i) {
+            for (int i = 0; i < shapes.size(); ++i) {
+                Shape* shape = shapes[i];
+                float distance = Vector2Distance(pos, shape->pos);
+                const float maxDist = 450;
 
-    switch (type) {
-        case 0:
-            displayScore = 100.0f * scoreMultiplier;
-            score += displayScore;
-            scoreSize += 25;
-            break;
-        case 1:
-            displayScore = 500.0f * scoreMultiplier;
-            score += displayScore;
-            scoreSize += 35;
-            shapes.push_back(new ScoreText(shape->pos, displayScore));
-            break;
-        default: break;
+                if (distance > maxDist) {
+                    continue;
+                }
+
+                if (shape->type == 3) {
+                    float strength = pow((maxDist - distance) / maxDist, 10.0);
+
+                    vecDir = Vector2MultiplyS(Vector2Normalize(Vector2Subtract(pos, shape->pos)), strength * -850);
+                    vel = Vector2Add(vel, vecDir);
+                }
+            }
+            vel.y += player->gravity * physicsDelta;
+            Vector2 newPos = Vector2Add(pos, Vector2MultiplyS(vel, physicsDelta));
+            DrawLineEx(pos, newPos, 12, Color(240, 240, 240, (1.0f - static_cast<float>(i) / static_cast<float>(lineCount)) * 255.0f));
+            pos = newPos;
+        }
     }
 }

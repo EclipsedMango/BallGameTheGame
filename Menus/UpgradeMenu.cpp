@@ -37,17 +37,17 @@ void upgradeMenu() {
     RenderTexture2D shaderTarget = LoadRenderTexture(windowWidth, windowHeight);
     const Shader bloomShader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
 
-    if (compareColors(playerColor, Color(67, 222, 108, 255))) {
+    if (compareColors(player->playerColor, Color(67, 222, 108, 255))) {
         colorButton1->toggled = true;
 
         colorButton1->color = colorButton1->colorPress;
         colorButton1->scale = 0.98;
-    } else if (compareColors(playerColor, Color(52, 156, 243, 255))) {
+    } else if (compareColors(player->playerColor, Color(52, 156, 243, 255))) {
         colorButton2->toggled = true;
 
         colorButton2->color = colorButton2->colorPress;
         colorButton2->scale = 0.98;
-    } else if (compareColors(playerColor, Color(194, 74, 237, 255))) {
+    } else if (compareColors(player->playerColor, Color(194, 74, 237, 255))) {
         colorButton3->toggled = true;
 
         colorButton3->color = colorButton3->colorPress;
@@ -89,24 +89,24 @@ void upgradeMenu() {
             colorButton2->toggled = false;
             colorButton3->toggled = false;
 
-            playerColor = Color(67, 222, 108, 255);
-            playerColorOutline = Color(49, 120, 54, 255);
+            player->playerColor = Color(67, 222, 108, 255);
+            player->playerColorOutline = Color(49, 120, 54, 255);
         }
 
         if (colorButton2->checkButtonRegion()) {
             colorButton1->toggled = false;
             colorButton3->toggled = false;
 
-            playerColor = Color(52, 156, 243, 255);
-            playerColorOutline = Color(31, 104, 150, 255);
+            player->playerColor = Color(52, 156, 243, 255);
+            player->playerColorOutline = Color(31, 104, 150, 255);
         }
 
         if (colorButton3->checkButtonRegion()) {
             colorButton1->toggled = false;
             colorButton2->toggled = false;
 
-            playerColor = Color(194, 74, 237, 255);
-            playerColorOutline = Color(94, 50, 125, 255);
+            player->playerColor = Color(194, 74, 237, 255);
+            player->playerColorOutline = Color(94, 50, 125, 255);
         }
 
         if (scoreMultiplierButton->checkButtonRegion() && money >= scoreMultiplierCost) {

@@ -8,7 +8,15 @@
 #include <vector>
 
 #include "raymath.h"
+#include "Particles/GravityShapeParticles.h"
+#include "Particles/PlayerDeathParticle.h"
+#include "Particles/PlayerMovementParticles.h"
+#include "Particles/ShapeParticles.h"
+#include "Shapes/CircleShape.h"
+#include "Shapes/GoldCircleShape.h"
 #include "Shapes/GravityShape.h"
+#include "Shapes/PentagonShape.h"
+#include "Shapes/ScoreText.h"
 #include "Shapes/Shape.h"
 
 void drawTextCentered(const char* text, const int posX, const int posY, const int fontSize, const Color color) {
@@ -82,7 +90,7 @@ bool trySpawnShape(std::vector<Shape*>* shapes, const Shapes type, Vector2 pos, 
     default: return false;
     }
 
-    bool passWindowCheck = ignoreWindowBounds || !isShapeInWindow(*shape, Vector2Subtract(playerPos, Vector2(windowWidth / 2.0, windowHeight / 2.0)));
+    bool passWindowCheck = ignoreWindowBounds || !isShapeInWindow(*shape, Vector2Subtract(player->playerPos, Vector2(windowWidth / 2.0, windowHeight / 2.0)));
 
     if (!checkOverlapShape(*shapes, shape) && passWindowCheck) {
         shapes->push_back(shape);
@@ -116,6 +124,56 @@ bool tryDeleteShape(std::vector<Shape*>* shapes, const Shape* shape, const int i
     }
 
     return false;
+}
+
+void spawnShapeParticles(std::vector<Particle*>* particles, const Vector2 shapePos, const Vector2 playerVel, const Shapes type) {
+    switch (type) {
+        case RED_CIRCLE:
+            particles->push_back(new ShapeParticles(shapePos, playerVel, 15, Color(236, 55, 82)));
+            break;
+        case GOLD_CIRCLE:
+            particles->push_back(new ShapeParticles(shapePos, playerVel, 10, Color(232, 184, 54)));
+            break;
+        case BLACK_HOLE:
+            particles->push_back(new GravityShapeParticles(shapePos, 3, Color(126, 0, 176)));
+            break;
+        case GREEN_PENTAGON:
+            particles->push_back(new ShapeParticles(shapePos, playerVel, 18, Color(41, 146, 74)));
+        default: printf("This particle doesn't exist\n");
+    }
+}
+
+void spawnPlayerParticles(std::vector<Particle*>* particles, const Vector2 playerPos, const Vector2 playerVel, const int type) {
+    switch (type) {
+        case 0:
+            particles->push_back(new PlayerMovementParticles(playerPos, 8, playerVel));
+            break;
+        case 1:
+            particles->push_back(new PlayerDeathParticle(Vector2(GetRandomValue(playerPos.x, playerPos.x + GetRandomValue(-30, 30)),
+                GetRandomValue(playerPos.y, playerPos.y - 45)), 16, playerVel));
+            break;
+        default: printf("This PlayerParticle doesn't exist\n");
+    }
+}
+
+void createDisplayScore (const Shapes type) {
+    switch (type) {
+        case RED_CIRCLE:
+            displayScore = 100.0f * scoreMultiplier;
+            score += displayScore;
+            scoreSize += 25;
+            break;
+        case GOLD_CIRCLE:
+            displayScore = 500.0f * scoreMultiplier;
+            score += displayScore;
+            scoreSize += 35;
+            break;
+        case GREEN_PENTAGON:
+            displayScore = 350.0f * scoreMultiplier;
+            score += displayScore;
+            scoreSize += 30;
+        default: break;
+    }
 }
 
 void runPostProcessing(const Texture2D &texture, const Shader shader) {

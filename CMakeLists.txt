@@ -58,6 +58,10 @@ add_executable(BallGameTheGame Main.cpp
         Shapes/GravityShape.h
         Particles/GravityShapeParticles.cpp
         Particles/GravityShapeParticles.h
+        Player.cpp
+        Player.h
+        CollisionCheck.cpp
+        CollisionCheck.h
 )
 
 target_link_libraries(BallGameTheGame raylib)
