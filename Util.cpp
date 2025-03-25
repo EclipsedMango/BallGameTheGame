@@ -45,6 +45,14 @@ Vector2 Vector2DivideS(const Vector2 a, float b) {
     return Vector2(a.x / b, a.y / 2);
 }
 
+float getRandomFloat() {
+    return static_cast<float>(GetRandomValue(0, 2147483647)) / 2147483648.0f;
+}
+
+float getRandomFloatRange(const float min, const float max) {
+    return getRandomFloat() * (max - min) + min;
+}
+
 float colorClamp(const float colorValue) {
     if (colorValue > 255) {
         return 255;

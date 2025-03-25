@@ -54,6 +54,7 @@ void runGame() {
     camera.rotation = 0.0f;
     camera.zoom = 1.25f * (windowHeight / 1080.0f);
 
+    player->shader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/player.fsh", GLSL_VERSION));
     RenderTexture2D shaderTarget = LoadRenderTexture(windowWidth, windowHeight);
     const Shader bloomShader = LoadShader(nullptr, TextFormat("resources/shaders/glsl%i/bloom.fsh", GLSL_VERSION));
 
@@ -157,7 +158,8 @@ void runGame() {
         if (shouldScreenShake) {
             screenShakeTimer -= delta;
             if (screenShakeTimer >= 0) {
-                camera.target = Vector2(camera.target.x + GetRandomValue(-1, 1), camera.target.y + GetRandomValue(-1, 1));
+                camera.target = Vector2(camera.target.x + getRandomFloatRange(-1.75, 1.75),
+                                        camera.target.y + getRandomFloatRange(-1.75, 1.75));
             } else {
                 screenShakeTimer = 0.1f;
                 shouldScreenShake = false;

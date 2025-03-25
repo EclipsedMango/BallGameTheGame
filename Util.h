@@ -58,6 +58,8 @@ void drawTextCentered(const char* text, int posX, int posY, int fontSize, Color 
 void drawTextCenteredFont(const Font &font, const char* text, float posX, float posY, int fontSize, float fontSpacing, Color color);
 Vector2 Vector2MultiplyS(Vector2 a, float b);
 Vector2 Vector2DivideS(Vector2 a, float b);
+float getRandomFloat();
+float getRandomFloatRange(float min, float max);
 void drawProgressBar(int posX, int posY, int height, int width, Color fillColor, Color emptyColor, float progress);
 float colorClamp(float colorValue);
 bool checkOverlapShape(std::vector<Shape*> shapes, Shape* shape);

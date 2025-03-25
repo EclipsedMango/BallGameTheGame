@@ -40,8 +40,29 @@ void Player::physicsUpdate() {
 }
 
 void Player::draw() const {
+    const Vector3 shaderPlayerColor = Vector3(
+        static_cast<float>(playerColor.r) / 255.0f,
+        static_cast<float>(playerColor.g) / 255.0f,
+        static_cast<float>(playerColor.b) / 255.0f
+    );
+
+    const Vector3 shaderPlayerOutlineColor = Vector3(
+        static_cast<float>(playerColorOutline.r) / 255.0f,
+        static_cast<float>(playerColorOutline.g) / 255.0f,
+        static_cast<float>(playerColorOutline.b) / 255.0f
+    );
+
+    SetShaderValue(shader, 1, &velocity, SHADER_UNIFORM_VEC2);
+    SetShaderValue(shader, 2, &shaderPlayerColor, SHADER_UNIFORM_VEC3);
+    SetShaderValue(shader, 3, &shaderPlayerOutlineColor, SHADER_UNIFORM_VEC3);
+
     if (!hasDied) {
-        DrawCircle(playerPos.x, playerPos.y, 20, playerColorOutline);
-        DrawCircle(playerPos.x, playerPos.y, 16, playerColor);
+        // DrawCircle(playerPos.x, playerPos.y, 20, playerColorOutline);
+        // DrawCircle(playerPos.x, playerPos.y, 16, playerColor);
+
+        BeginShaderMode(shader);
+        DrawRectangleV(Vector2SubtractValue(playerPos, displayRadius / 2), Vector2(displayRadius, displayRadius), playerColor);
+        //DrawRectangle(playerPos.x - 960, playerPos.y - 540, 1920, 1080, WHITE);
+        EndShaderMode();
     }
 }

@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "rlgl.h"
 #include "Util.h"
 #include "Game/Game.h"
 #include "Menus/MainMenu.h"
@@ -13,6 +14,9 @@ int main() {
     SetWindowMonitor(monitor);
 
     SetWindowState(FLAG_WINDOW_RESIZABLE);
+
+    Texture2D texture = { rlGetTextureIdDefault(), 1, 1, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 };
+    SetShapesTexture(texture, (Rectangle){ 0.0f, 0.0f, 1.0f, 1.0f });
 
     while (!WindowShouldClose() && !shouldGameClose) {
         if (inMenu) {

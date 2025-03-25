@@ -1,5 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
+
 #include "raylib.h"
 
 class Player {
@@ -16,7 +17,10 @@ public:
     float gravity = 2048;
     float hitBox = 20;
     float radius = 16;
+    float displayRadius = 160;
     float outLineRadius = 20;
+
+    Shader shader{};
 
     void draw() const;
     void physicsUpdate();
